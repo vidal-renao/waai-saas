@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "node scripts/fix-middleware-nft.js",
+    "postbuild": "node scripts/fix-middleware-nft.mjs",
     "start": "next start",
     "lint": "eslint"
   },
