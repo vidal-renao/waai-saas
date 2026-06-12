@@ -4,9 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/fix-middleware-nft.mjs",
     "build": "next build",
-    "postbuild": "node scripts/fix-middleware-nft.mjs",
     "start": "next start",
     "lint": "eslint"
   },
