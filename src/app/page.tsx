@@ -11,8 +11,9 @@ export default function Home() {
         </h1>
 
         <p className="text-lg text-zinc-400 max-w-md">
-          WhatsApp AI Agent Platform. Build, configure and deploy intelligent
-          WhatsApp agents for your business — no code required.
+          AI-powered WhatsApp agent platform for SMEs. Build, configure and
+          deploy intelligent WhatsApp agents with RAG, lead capture and human
+          handoff.
         </p>
 
         <div className="flex flex-wrap gap-2 justify-center mt-2">
@@ -20,8 +21,11 @@ export default function Home() {
             "Multi-tenant",
             "Claude API",
             "RAG",
+            "WhatsApp Mock",
             "Human Handoff",
             "Lead Capture",
+            "Analytics",
+            "Billing Ready",
           ].map((tag) => (
             <span
               key={tag}
@@ -37,9 +41,10 @@ export default function Home() {
             Status
           </p>
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-yellow-400" />
+            <span className="h-2 w-2 rounded-full bg-green-400" />
             <span className="text-sm text-zinc-300">
-              Fase 0 complete — Fase 1 coming next
+              v0.9.0 staging ready — Supabase connected, RLS enabled, RAG
+              enabled
             </span>
           </div>
         </div>
