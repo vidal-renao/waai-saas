@@ -56,26 +56,14 @@ export async function simulateWhatsappMessageUseCase(
     return { success: false, errorMessage: "Could not normalize mock message" };
   }
 
-  // Build raw body as if Whapi sent it (Mock provider accepts any payload)
+  // Pass the simple mock format that MockWhatsAppProvider.normalizeIncomingMessage expects
   const mockPayload = {
-    event: {
-      type: "messages",
-      data: {
-        messages: [
-          {
-            id: normalized.externalMessageId,
-            chatId: normalized.externalChatId,
-            from: `${input.fromNumber}@s.whatsapp.net`,
-            to: `${connection.phone_number ?? "WAAI"}@s.whatsapp.net`,
-            type: "text",
-            body: input.text,
-            timestamp: Math.floor(Date.now() / 1000),
-            fromMe: false,
-          },
-        ],
-      },
-    },
-    channelId: connection.external_instance_id ?? "simulate",
+    from: input.fromNumber,
+    text: input.text,
+    chatId: normalized.externalChatId,
+    toNumber: connection.phone_number ?? connection.external_instance_id ?? "MOCK_NUMBER",
+    externalMessageId: normalized.externalMessageId,
+    timestamp: Math.floor(Date.now() / 1000),
   };
 
   // Temporarily force mock provider for simulation
