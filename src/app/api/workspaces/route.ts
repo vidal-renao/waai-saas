@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceRoleClient } from "@/lib/supabase/service-role";
 import { createWorkspaceUseCase } from "@/server/use-cases/create-workspace";
 import { createWorkspaceSchema } from "@/lib/validators/workspace";
 
@@ -28,7 +29,11 @@ export async function POST(request: Request) {
     );
   }
 
-  const result = await createWorkspaceUseCase(supabase, user.id, parsed.data);
+  // Auth verified above — use service role for DB ops:
+  // workspace INSERT needs auth.uid() from JWT that doesn't reach PostgREST
+  // in serverless Route Handlers; subscription INSERT requires service_role.
+  const serviceClient = createServiceRoleClient();
+  const result = await createWorkspaceUseCase(serviceClient, user.id, parsed.data);
 
   if (result.error) {
     return NextResponse.json({ error: result.error }, { status: 400 });
