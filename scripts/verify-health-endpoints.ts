@@ -18,12 +18,24 @@ const RED = "\x1b[31m";
 const YELLOW = "\x1b[33m";
 const BOLD = "\x1b[1m";
 
+interface HealthResponseBody {
+  status?: string;
+  timestamp?: string;
+  version?: string;
+  environment?: string;
+  database?: string;
+  model?: string;
+  provider?: string;
+  message?: string;
+  error?: string;
+}
+
 interface EndpointCheck {
   name: string;
   path: string;
   requiresSecret: boolean;
   expectedStatus: number;
-  expectStatusField?: string; // expected value of response.status field
+  expectStatusField?: string;
 }
 
 const ENDPOINTS: EndpointCheck[] = [
@@ -99,7 +111,7 @@ async function main() {
 
     try {
       const response = await fetch(url, { headers });
-      const body = await response.json().catch(() => null);
+      const body = (await response.json().catch(() => null)) as HealthResponseBody | null;
 
       const statusOk = response.status === endpoint.expectedStatus;
       const fieldOk = !endpoint.expectStatusField ||
