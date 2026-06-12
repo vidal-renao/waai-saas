@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { WorkspaceMembersRepository } from "@/server/repositories/workspace-members.repository";
 import Link from "next/link";
@@ -15,9 +16,12 @@ export default async function DashboardLayout({
 
   if (!user) redirect("/login");
 
+  const headersList = await headers();
+  const pathname = headersList.get('x-pathname') ?? '';
+
   const membersRepo = new WorkspaceMembersRepository(supabase);
   const workspaceId = await membersRepo.getUserWorkspaceId(user.id);
-  if (!workspaceId) redirect("/onboarding");
+  if (!workspaceId && pathname !== '/onboarding') redirect("/onboarding");
 
   return (
     <div className="flex min-h-screen flex-col bg-zinc-950">
