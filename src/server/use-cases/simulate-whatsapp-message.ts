@@ -4,6 +4,7 @@ import { WorkspaceMembersRepository } from "@/server/repositories/workspace-memb
 import { WhatsappConnectionRepository } from "@/server/repositories/whatsapp-connection-repository";
 import { WhatsappWebhookService } from "@/server/services/whatsapp-webhook-service";
 import { MockWhatsAppProvider } from "@/lib/whatsapp/mock-whatsapp-provider";
+import { createServiceRoleClient } from "@/lib/supabase/service-role";
 
 type Client = SupabaseClient<Database>;
 
@@ -81,7 +82,10 @@ export async function simulateWhatsappMessageUseCase(
   const originalProvider = process.env.WHATSAPP_PROVIDER;
   process.env.WHATSAPP_PROVIDER = "mock";
 
-  const webhookSvc = new WhatsappWebhookService(db);
+  // Webhook service needs service-role client: waai_whatsapp_webhook_events
+  // blocks INSERT for non-service-role (real webhooks auth via INTERNAL_API_SECRET)
+  const serviceDb = createServiceRoleClient();
+  const webhookSvc = new WhatsappWebhookService(serviceDb);
   const result = await webhookSvc.processWebhook({
     rawBody: JSON.stringify(mockPayload),
     headers: { "x-whapi-token": "mock" },
