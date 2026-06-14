@@ -54,8 +54,8 @@ export default async function WhatsappPage() {
       <div className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900/50 p-5">
         <p className="text-xs font-medium text-zinc-400 mb-3">¿Cómo funciona?</p>
         <ol className="text-xs text-zinc-500 space-y-1 list-decimal list-inside">
-          <li>Crea una conexión y asigna un agente.</li>
-          <li>Copia la URL del webhook y configúrala en Whapi.cloud.</li>
+          <li>Crea una conexión con tu Phone Number ID y token de Meta.</li>
+          <li>Copia la URL del webhook y configúrala en Meta Business → WhatsApp → Configuración API.</li>
           <li>Usa el simulador para probar sin necesidad de WhatsApp real.</li>
           <li>Cuando todo funcione, activa la conexión y recibe mensajes reales.</li>
         </ol>

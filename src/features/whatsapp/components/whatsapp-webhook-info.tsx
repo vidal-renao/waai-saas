@@ -42,15 +42,14 @@ export function WhatsappWebhookInfo({
       </div>
       <div className="rounded-lg border border-zinc-800 bg-zinc-950/50 p-3">
         <p className="text-xs font-medium text-zinc-400 mb-2">
-          Instrucciones para Whapi.cloud
+          Instrucciones para Meta Cloud API
         </p>
         <ol className="text-xs text-zinc-500 space-y-1 list-decimal list-inside">
-          <li>Accede a tu dashboard en whapi.cloud</li>
-          <li>Ve a tu Canal → Webhooks</li>
-          <li>Pega la URL anterior como Webhook URL</li>
-          <li>Configura el Token (WHAPI_TOKEN de tu .env)</li>
-          <li>Activa el evento: <code className="text-zinc-400">messages</code></li>
-          <li>Guarda y envía un mensaje de prueba</li>
+          <li>Ve a Meta Business → WhatsApp → Configuración API</li>
+          <li>En "Webhooks", pega la URL anterior como URL de devolución de llamada</li>
+          <li>Introduce el token de verificación y haz clic en "Verificar y guardar"</li>
+          <li>Activa el campo de suscripción: <code className="text-zinc-400">messages</code></li>
+          <li>Guarda y envía un mensaje de prueba desde Meta</li>
         </ol>
       </div>
     </div>
