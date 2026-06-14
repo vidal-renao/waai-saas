@@ -1,6 +1,15 @@
 # WAAI SaaS — WhatsApp AI Agent Platform
 
-A multi-tenant SaaS platform that lets businesses create, configure, and deploy intelligent WhatsApp agents without writing code. Each business connects their WhatsApp number, uploads their documents, configures their agent through a guided interview, and gets an AI-powered assistant that answers customers, captures leads, and escalates to humans when needed.
+![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=flat-square&logo=typescript)
+![Supabase](https://img.shields.io/badge/Supabase-RLS%20enforced-3ECF8E?style=flat-square&logo=supabase)
+![Claude](https://img.shields.io/badge/Claude-Sonnet%204.6-D4A017?style=flat-square)
+![pgvector](https://img.shields.io/badge/pgvector-RAG-336791?style=flat-square&logo=postgresql)
+![Vercel](https://img.shields.io/badge/Vercel-production-000000?style=flat-square&logo=vercel)
+![Swiss DSG](https://img.shields.io/badge/Swiss%20DSG-Compliant-DC143C?style=flat-square)
+![Version](https://img.shields.io/badge/version-v0.9.0-22c55e?style=flat-square)
+
+A multi-tenant SaaS platform that lets businesses create, configure, and deploy intelligent WhatsApp agents without writing code. Each business connects their WhatsApp number, uploads their documents, configures their agent through a guided wizard, and gets an AI-powered assistant that answers customers, captures leads, and escalates to humans when needed.
 
 ---
 
@@ -14,6 +23,50 @@ Small businesses lose leads because they can't respond to WhatsApp fast enough. 
 
 ---
 
+## Production Status — v0.9.0
+
+> **Production deployment verified and stable as of 2026-06-14.**
+
+### Confirmed operational
+
+| Component | Status | Notes |
+| --- | --- | --- |
+| `waai-saas.vercel.app` | **Live** | Deployment `dpl_7UpK6186Jv6Msrjfjq3PMexZ5rk3` promoted to production |
+| Register → Onboarding → Dashboard | **100% operational** | Full flow verified end-to-end |
+| `POST /api/workspaces` RLS | **Resolved** | Service role client pattern — JWT forwarding issue eliminated |
+| `/api/agents/[id]/sandbox` | **Validated** | Async streaming + dynamic System Prompt injection confirmed |
+| Claude Sonnet 4.6 (streaming) | **Stable** | Consistent responses after Anthropic Billing Org unblock |
+| `/api/health` | **200 OK** | All health endpoints responding |
+| Supabase RLS | **Enforced** | All `waai_*` tables — no cross-workspace access |
+| pgvector RAG | **Active** | Cosine similarity search on `waai_document_chunks` |
+
+### Production constraints (intentional)
+
+| Guard | State |
+| --- | --- |
+| Stripe | Inactive — no real charges |
+| Meta WhatsApp Cloud API | Inactive — `WHATSAPP_PROVIDER=mock` |
+| Real WhatsApp delivery | Disabled |
+
+---
+
+## Changelog — v0.9.0 (2026-06-14)
+
+### Infrastructure
+- **Promoted `dpl_7UpK6186Jv6Msrjfjq3PMexZ5rk3` to production** — `waai-saas.vercel.app` now serves the stable v0.9.0 build
+- Supabase remote migrations applied (9 migrations, `focgfmhgfmhmcbywwsej`, eu-west-1)
+
+### Backend fixes
+- **`fix(workspaces): service role client for POST /api/workspaces`** (`54a073e`) — Auth verification uses user client; DB operations use service role to bypass PostgREST JWT forwarding gap in Vercel serverless Route Handlers. Eliminates `new row violates row-level security policy for table "waai_workspaces"` error permanently.
+- **`fix(onboarding): move /onboarding outside (dashboard) group`** (`37447c6`) — Standalone route with own auth + workspace check. Eliminates redirect loop and blank page at `/onboarding`.
+- **`fix(scripts): HealthResponseBody type for verify-health-endpoints`** (`0ae4e10`) — TS2339 resolved without `any`; `Response.json()` cast safely to typed interface.
+
+### Sandbox validation
+- `/api/agents/[id]/sandbox` end-to-end verified: async streaming engine + dynamic context injection (System Prompt + RAG chunks) responds consistently with Claude Sonnet 4.6
+- Anthropic Billing Org unblocked — real API calls active in staging and production environments
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -23,47 +76,81 @@ Small businesses lose leads because they can't respond to WhatsApp fast enough. 
 | Forms | React Hook Form + Zod |
 | Auth | Supabase Auth |
 | Database | Supabase PostgreSQL (public schema, `waai_` prefix) |
-| Vector search | pgvector (RAG) |
+| Vector search | pgvector — `text-embedding-3-small`, 1536d, cosine similarity |
 | Edge Functions | Supabase Edge Functions (Deno) |
-| LLM | Claude API (Anthropic) — `claude-haiku-4-5-20251001` / `claude-sonnet-4-6` |
-| Embeddings | OpenAI `text-embedding-3-small` (1536 dimensions) |
+| LLM | Claude Sonnet 4.6 — sandbox + WhatsApp responses |
+| LLM (fast) | Claude Haiku 4.5 — lead detection extraction |
+| Embeddings | OpenAI `text-embedding-3-small` |
 | WhatsApp MVP | Whapi.cloud |
 | WhatsApp prod | Meta WhatsApp Cloud API |
-| Deploy | Vercel + Supabase Cloud |
+| Deploy | Vercel (frontend + API routes) |
 | CI/CD | GitHub Actions |
 
 ---
 
-## Spec Driven Development (SDD) Workflow
+## Architecture
 
-This project follows **Spec Driven Development**. Before writing any feature code:
+```
+Customer (WhatsApp)
+      ↓
+WhatsApp Provider (Whapi.cloud / Meta Cloud API)
+      ↓  POST /api/webhooks/whatsapp  [signature verified]
+WebhookNormalizer      ← provider-specific → canonical format
+      ↓
+ConversationService    ← create/resume, check plan limits, check handoff state
+      ↓
+KnowledgeRetrieval     ← embed query → cosine search waai_document_chunks (pgvector)
+      ↓
+LLMOrchestrator        ← system prompt + RAG context → Claude Sonnet 4.6
+      ↓
+PolicyGuardrails       ← rules, tone, escalation triggers
+      ↓
+ResponseFormatter      ← WhatsApp-safe text (≤1600 chars, no markdown)
+      ↓
+WhatsAppProvider.sendTextMessage()
+      ↓
+Customer receives reply
+```
 
-1. Write the spec in `docs/specs/<feature-name>.md`
-2. Record architectural decisions in `docs/adr/ADR-XXXX-<title>.md`
-3. Define the data model in `docs/specs/data-model.md`
-4. Implement feature code after spec is approved
-5. Run lint + build + tests before closing a phase
+**Sandbox path** (`/api/agents/[id]/sandbox/message`):
 
-**Spec files are the source of truth** for what is being built and why.
+```
+Browser → POST /api/agents/[id]/sandbox/message
+             ↓
+         Auth check (Supabase user client)
+             ↓
+         AgentRuntimeService
+           ├── load agent config + active prompt version
+           ├── KnowledgeRetrieval (pgvector RAG)
+           └── Claude Sonnet 4.6 (streaming)
+             ↓
+         SSE stream → browser
+```
 
----
+**WhatsApp handoff guard:**
 
-## Database Conventions
+```
+Inbound message → check waai_handoffs (automation_paused)
+  ├── paused=true  → store message, DO NOT call Claude
+  └── paused=false → full ConversationService → Claude → send reply
+```
 
-> **Rule: all tables in the `public` schema, all objects prefixed with `waai_`.**
+### Multi-tenancy
 
-This project shares a Supabase project with other applications. To avoid conflicts:
+Every request is scoped to a `workspace_id`. RLS policies on all `waai_*` tables enforce isolation at the PostgreSQL level. The application layer also validates `workspace_id` in every service method as defense-in-depth.
 
-- `waai_workspaces`, `waai_agents`, `waai_conversations`, `waai_messages`, `waai_leads`
-- No custom schemas (no `CREATE SCHEMA waai`)
-- No unprefixed tables
+### Auth pattern in Route Handlers
 
-Every table must have:
+```ts
+// Verify identity: user client (reads JWT from cookie via @supabase/ssr)
+const supabase = await createClient();
+const { data: { user } } = await supabase.auth.getUser();
 
-- `workspace_id uuid` — for tenant isolation
-- RLS enabled with workspace-scoped policies
+// DB operations: service role client (bypasses PostgREST JWT gap in serverless)
+const serviceClient = createServiceRoleClient();
+```
 
-See [ADR-0002](docs/adr/ADR-0002-supabase-public-schema-and-waai-prefix.md) for full rationale.
+See [ADR-0002](docs/adr/ADR-0002-supabase-public-schema-and-waai-prefix.md) and [Architecture Overview](docs/architecture/overview.md).
 
 ---
 
@@ -80,7 +167,48 @@ See [ADR-0002](docs/adr/ADR-0002-supabase-public-schema-and-waai-prefix.md) for 
 | Fase 6 | Leads & Human Handoff | Complete | 0.6.x |
 | Fase 7 | Analytics & Dashboard | Complete | 0.7.x |
 | Fase 8 | Production Hardening & Billing Readiness | Complete | 0.8.0 |
-| Fase 9 | Deployment & Supabase Remote Migration | Complete | 0.9.0 |
+| Fase 9 | Deployment & Production Stabilisation | **Complete** | **0.9.0** |
+
+---
+
+## Plans
+
+| Plan | Agents | WhatsApp numbers | Messages/month | Documents | Human handoff |
+| --- | --- | --- | --- | --- | --- |
+| Free | 1 | 0 (sandbox only) | 100 | 3 | No |
+| Starter | 1 | 1 | 1,000 | 10 | No |
+| Pro | 3 | 3 | 10,000 | 50 | Yes |
+| Agency | 20 | 20 | 100,000 | 500 | Yes |
+| Enterprise | Unlimited | Unlimited | Unlimited | Unlimited | Yes |
+
+Plan limits are enforced server-side (service layer) with HTTP 402 on breach. Never client-side only.
+
+---
+
+## Database Conventions
+
+> **Rule: all tables in the `public` schema, all objects prefixed with `waai_`.**
+
+This project shares a Supabase project (`focgfmhgfmhmcbywwsej`) with other applications. To avoid conflicts:
+
+- All tables: `waai_workspaces`, `waai_agents`, `waai_conversations`, `waai_messages`, `waai_leads`, `waai_knowledge_documents`, `waai_knowledge_chunks`, `waai_subscriptions`, …
+- No custom schemas — no `CREATE SCHEMA waai`
+- No unprefixed tables
+
+Every table has `workspace_id uuid` and RLS enabled with workspace-scoped policies.
+
+See [ADR-0002](docs/adr/ADR-0002-supabase-public-schema-and-waai-prefix.md) for full rationale.
+
+---
+
+## Security
+
+- **RLS on every table** — enforced at PostgreSQL level, not just application
+- **WhatsApp tokens encrypted** at rest (`access_token_encrypted`)
+- **Webhook signature verification** before processing any inbound payload
+- **No PII in application logs**
+- **Audit logs immutable** — INSERT-only, no UPDATE/DELETE on `waai_audit_logs`
+- **Swiss DSG / nDSG compliant** — data residency, retention policies, PII detection before persistence
 
 ---
 
@@ -90,7 +218,7 @@ See [ADR-0002](docs/adr/ADR-0002-supabase-public-schema-and-waai-prefix.md) for 
 
 - Node.js 20+
 - npm 10+
-- Supabase project (shared project, `public` schema only)
+- Supabase project (`public` schema, `waai_` prefix tables)
 - Anthropic API key
 - OpenAI API key (embeddings only)
 
@@ -107,13 +235,8 @@ npm run dev
 
 ### Environment variables
 
-See [`.env.example`](.env.example) for all required variables with descriptions.
-
----
-
-## Architecture
-
-See [`docs/architecture/overview.md`](docs/architecture/overview.md) for the full system architecture.
+See [`.env.example`](.env.example) for all required variables.  
+Staging template: [`.env.staging.example`](.env.staging.example)
 
 ---
 
@@ -137,6 +260,17 @@ See [`docs/architecture/overview.md`](docs/architecture/overview.md) for the ful
 npm run dev       # Start development server
 npm run build     # Production build
 npm run lint      # ESLint
+
+# Verify env vars are present (no values printed)
+npx ts-node --skipProject scripts/verify-production-env.ts
+
+# Verify all health endpoints
+APP_URL=https://waai-saas.vercel.app \
+  INTERNAL_API_SECRET=<secret> \
+  npx ts-node --skipProject scripts/verify-health-endpoints.ts
+
+# Verify staging readiness
+npx ts-node --skipProject scripts/verify-staging-readiness.ts
 ```
 
 ---
@@ -145,70 +279,53 @@ npm run lint      # ESLint
 
 ### Vercel
 
-Deploy automatically from the `main` branch via GitHub integration, or manually with `vercel --prod`.
+Automatic deploy from `main` via GitHub integration.  
+Preview deploys from any branch — promote to production via Vercel dashboard or CLI.
 
-See [`docs/architecture/41-vercel-deployment-architecture.md`](docs/architecture/41-vercel-deployment-architecture.md) for full Vercel configuration.
+See [`docs/architecture/41-vercel-deployment-architecture.md`](docs/architecture/41-vercel-deployment-architecture.md).
 
 ### Supabase Migrations
 
 ```bash
-supabase link --project-ref <your-project-ref>
+supabase link --project-ref focgfmhgfmhmcbywwsej
 supabase db push   # Applies all 9 migrations in order
 ```
 
-See [`docs/architecture/42-supabase-remote-migration-execution.md`](docs/architecture/42-supabase-remote-migration-execution.md) for the full migration guide.
+See [`docs/architecture/42-supabase-remote-migration-execution.md`](docs/architecture/42-supabase-remote-migration-execution.md).
 
-### Verification Scripts
+### Spec Driven Development (SDD)
 
-```bash
-# Verify environment variables (no values printed)
-npx ts-node --skipProject scripts/verify-production-env.ts
+Before writing any feature code:
 
-# Verify health endpoints
-APP_URL=https://your-domain.vercel.app \
-  INTERNAL_API_SECRET=your-secret \
-  npx ts-node --skipProject scripts/verify-health-endpoints.ts
-```
-
-### Runbook
-
-Step-by-step production deployment: [`docs/prompts/08-production-deployment-runbook.md`](docs/prompts/08-production-deployment-runbook.md)
+1. Write spec in `docs/specs/<feature-name>.md`
+2. Record architectural decision in `docs/adr/ADR-XXXX-<title>.md`
+3. Define data model in `docs/specs/data-model.md`
+4. Implement after spec is approved
+5. `npm run lint && npm run build` must pass before closing any phase
 
 ---
 
-## Staging v0.9.0
-
-WAAI SaaS v0.9.0 is feature-complete (Phases 1–9). The following guides cover the full staging execution process:
+## Operations — v0.9.0
 
 | Guide | Description |
 | --- | --- |
-| [Staging Execution Runbook](docs/operations/staging-execution-runbook.md) | Step-by-step: git → GitHub → Supabase → Vercel → smoke tests |
-| [Supabase Staging Setup](docs/operations/supabase-staging-setup.md) | Create project, enable pgvector, apply 9 migrations, seed plans |
-| [Vercel Staging Setup](docs/operations/vercel-staging-setup.md) | Connect repo, configure env vars, deploy, verify health endpoints |
-| [Smoke Test Execution](docs/operations/staging-smoke-test-execution.md) | 96-test execution guide with results table and bug procedures |
-| [Release Checklist](docs/operations/release-staging-v0.9.0-checklist.md) | Executive sign-off checklist (A–I blocks) |
-
-**Environment template:** [`.env.staging.example`](.env.staging.example)
+| [Staging Execution Runbook](docs/operations/staging-execution-runbook.md) | git → GitHub → Supabase → Vercel → smoke tests |
+| [Supabase Staging Setup](docs/operations/supabase-staging-setup.md) | Create project, enable pgvector, apply migrations, seed plans |
+| [Vercel Staging Setup](docs/operations/vercel-staging-setup.md) | Connect repo, configure env vars, deploy, verify health |
+| [Smoke Test Execution](docs/operations/staging-smoke-test-execution.md) | 96-test execution guide (90/96 PASS minimum, 0 critical failures) |
+| [Release Checklist](docs/operations/release-staging-v0.9.0-checklist.md) | Executive sign-off checklist (blocks A–I) |
 
 **SQL utilities:**
 
 - [`docs/sql/waai-staging-seed-plans.sql`](docs/sql/waai-staging-seed-plans.sql) — Seed Free / Starter / Pro / Agency plans
 - [`docs/sql/waai-staging-verification.sql`](docs/sql/waai-staging-verification.sql) — Post-migration verification queries
-- [`docs/sql/waai-staging-rollback-notes.sql`](docs/sql/waai-staging-rollback-notes.sql) — Rollback notes and diagnostics
-
-**Staging readiness script:**
-
-```bash
-npx ts-node --skipProject scripts/verify-staging-readiness.ts
-```
+- [`docs/sql/waai-staging-rollback-notes.sql`](docs/sql/waai-staging-rollback-notes.sql) — Rollback diagnostics
 
 ---
 
 ## Contributing
 
-This project uses Spec Driven Development. Before starting any feature:
-
 1. Open an issue or spec doc
 2. Get spec approved
-3. Implement following the conventions in this README
-4. Ensure lint + build pass before PR
+3. Implement following conventions in this README and `CLAUDE.md`
+4. `npm run lint && npm run build` must pass before any PR
