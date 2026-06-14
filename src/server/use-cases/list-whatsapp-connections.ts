@@ -30,9 +30,12 @@ export async function listWhatsappConnectionsUseCase(
     p_workspace_id: workspaceId,
   });
 
+  // In development: bypass plan limits so the full WhatsApp config form is always accessible.
+  const isDev = process.env.NODE_ENV === "development";
+
   return {
     connections,
-    canCreate: canCreate ?? false,
+    canCreate: isDev ? true : (canCreate ?? false),
     connectionCount: connectionCount ?? connections.length,
   };
 }
