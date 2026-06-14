@@ -17,7 +17,12 @@ export default async function WhatsappPage() {
   const data = await listWhatsappConnectionsUseCase(supabase, user.id);
   if (!data) redirect("/onboarding");
 
-  const { connections, canCreate, connectionCount } = data;
+  const bypassLimit =
+    process.env.NODE_ENV === "development" ||
+    process.env.NEXT_PUBLIC_BYPASS_WHATSAPP_LIMIT === "true";
+
+  const { connections, canCreate: canCreateFromPlan, connectionCount } = data;
+  const canCreate = bypassLimit ? true : canCreateFromPlan;
 
   return (
     <div className="mx-auto max-w-4xl">
