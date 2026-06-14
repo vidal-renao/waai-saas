@@ -48,15 +48,21 @@ export class WhatsappConnectionService {
       return { error: "No tienes permisos para crear conexiones WhatsApp.", code: "FORBIDDEN" };
     }
 
-    const { data: canCreate } = await this.db.rpc(
-      "waai_can_create_whatsapp_connection",
-      { p_workspace_id: workspaceId }
-    );
-    if (!canCreate) {
-      return {
-        error: "Has alcanzado el límite de conexiones WhatsApp de tu plan. Actualiza para continuar.",
-        code: "LIMIT_REACHED",
-      };
+    const bypassLimit =
+      process.env.NODE_ENV === "development" ||
+      process.env.NEXT_PUBLIC_BYPASS_WHATSAPP_LIMIT === "true";
+
+    if (!bypassLimit) {
+      const { data: canCreate } = await this.db.rpc(
+        "waai_can_create_whatsapp_connection",
+        { p_workspace_id: workspaceId }
+      );
+      if (!canCreate) {
+        return {
+          error: "Has alcanzado el límite de conexiones WhatsApp de tu plan. Actualiza para continuar.",
+          code: "LIMIT_REACHED",
+        };
+      }
     }
 
     const connection = await this.connRepo.create({

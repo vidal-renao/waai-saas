@@ -32,24 +32,29 @@ export default async function NewWhatsappConnectionPage() {
     );
   }
 
-  // Check limit
-  const { data: canCreateConnection } = await supabase.rpc(
-    "waai_can_create_whatsapp_connection",
-    { p_workspace_id: workspaceId }
-  );
+  const bypassLimit =
+    process.env.NODE_ENV === "development" ||
+    process.env.NEXT_PUBLIC_BYPASS_WHATSAPP_LIMIT === "true";
 
-  if (!canCreateConnection) {
-    return (
-      <div className="mx-auto max-w-2xl">
-        <div className="rounded-xl border border-yellow-800 bg-yellow-950/20 p-8 text-center">
-          <p className="text-yellow-400 font-medium">Límite de plan alcanzado</p>
-          <p className="mt-2 text-sm text-zinc-400">
-            Has alcanzado el límite de conexiones WhatsApp de tu plan actual.
-            Actualiza para añadir más.
-          </p>
-        </div>
-      </div>
+  if (!bypassLimit) {
+    const { data: canCreateConnection } = await supabase.rpc(
+      "waai_can_create_whatsapp_connection",
+      { p_workspace_id: workspaceId }
     );
+
+    if (!canCreateConnection) {
+      return (
+        <div className="mx-auto max-w-2xl">
+          <div className="rounded-xl border border-yellow-800 bg-yellow-950/20 p-8 text-center">
+            <p className="text-yellow-400 font-medium">Límite de plan alcanzado</p>
+            <p className="mt-2 text-sm text-zinc-400">
+              Has alcanzado el límite de conexiones WhatsApp de tu plan actual.
+              Actualiza para añadir más.
+            </p>
+          </div>
+        </div>
+      );
+    }
   }
 
   // Load active agents for assignment
