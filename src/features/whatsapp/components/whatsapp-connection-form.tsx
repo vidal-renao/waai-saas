@@ -14,10 +14,12 @@ export function WhatsappConnectionForm({ agents }: Props) {
   const [error, setError] = useState<string | null>(null);
 
   const [form, setForm] = useState({
-    provider: "whapi" as "mock" | "whapi",
+    provider: "meta" as "mock" | "meta",
     displayName: "",
     phoneNumber: "",
-    externalInstanceId: "",
+    phoneNumberId: "",
+    wabaId: "",
+    accessToken: "",
     agentId: "" as string | null,
   });
 
@@ -25,6 +27,10 @@ export function WhatsappConnectionForm({ agents }: Props) {
     e.preventDefault();
     if (!form.displayName.trim()) {
       setError("El nombre es obligatorio.");
+      return;
+    }
+    if (form.provider === "meta" && !form.phoneNumberId.trim()) {
+      setError("El Phone Number ID es obligatorio para Meta Cloud API.");
       return;
     }
     setLoading(true);
@@ -38,7 +44,9 @@ export function WhatsappConnectionForm({ agents }: Props) {
           provider: form.provider,
           displayName: form.displayName,
           phoneNumber: form.phoneNumber || undefined,
-          externalInstanceId: form.externalInstanceId || undefined,
+          phoneNumberId: form.phoneNumberId || undefined,
+          wabaId: form.wabaId || undefined,
+          accessToken: form.accessToken || undefined,
           agentId: form.agentId || null,
         }),
       });
@@ -68,13 +76,16 @@ export function WhatsappConnectionForm({ agents }: Props) {
 
       {/* Provider */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-zinc-300">Provider</label>
+        <label htmlFor="provider" className="text-sm font-medium text-zinc-300">Proveedor</label>
         <select
+          id="provider"
           value={form.provider}
-          onChange={(e) => setForm((p) => ({ ...p, provider: e.target.value as "mock" | "whapi" }))}
+          onChange={(e) =>
+            setForm((p) => ({ ...p, provider: e.target.value as "mock" | "meta" }))
+          }
           className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-green-500"
         >
-          <option value="whapi">Whapi.cloud (MVP)</option>
+          <option value="meta">Meta Cloud API (Oficial)</option>
           <option value="mock">Mock (desarrollo local)</option>
         </select>
       </div>
@@ -96,9 +107,7 @@ export function WhatsappConnectionForm({ agents }: Props) {
 
       {/* Phone number */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-zinc-300">
-          Número de WhatsApp
-        </label>
+        <label className="text-sm font-medium text-zinc-300">Número de teléfono</label>
         <input
           type="text"
           value={form.phoneNumber}
@@ -106,34 +115,67 @@ export function WhatsappConnectionForm({ agents }: Props) {
           placeholder="Ej: 34612345678"
           className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-green-500"
         />
-        <p className="text-xs text-zinc-500">Sin el símbolo +, solo dígitos.</p>
+        <p className="text-xs text-zinc-500">Con código de país, sin el símbolo +.</p>
       </div>
 
-      {/* Instance ID (Whapi channel ID) */}
-      {form.provider === "whapi" && (
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-zinc-300">
-            Whapi Channel ID
-          </label>
-          <input
-            type="text"
-            value={form.externalInstanceId}
-            onChange={(e) => setForm((p) => ({ ...p, externalInstanceId: e.target.value }))}
-            placeholder="Ej: abc123-channel-id"
-            className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-          />
-          <p className="text-xs text-zinc-500">
-            Encuéntralo en tu dashboard de Whapi.cloud → Canal → Detalles.
-          </p>
-        </div>
+      {/* Meta-specific fields */}
+      {form.provider === "meta" && (
+        <>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-zinc-300">
+              Phone Number ID <span className="text-red-400">*</span>
+            </label>
+            <input
+              type="text"
+              value={form.phoneNumberId}
+              onChange={(e) => setForm((p) => ({ ...p, phoneNumberId: e.target.value }))}
+              placeholder="Ej: 123456789012345"
+              className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+            />
+            <p className="text-xs text-zinc-500">
+              Meta Business → WhatsApp → Configuración API → Phone Number ID.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-zinc-300">
+              WhatsApp Business Account ID (WABA ID)
+            </label>
+            <input
+              type="text"
+              value={form.wabaId}
+              onChange={(e) => setForm((p) => ({ ...p, wabaId: e.target.value }))}
+              placeholder="Ej: 987654321098765"
+              className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+            />
+            <p className="text-xs text-zinc-500">
+              Meta Business → WhatsApp → Configuración → WABA ID.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-zinc-300">
+              Permanent Access Token
+            </label>
+            <input
+              type="password"
+              value={form.accessToken}
+              onChange={(e) => setForm((p) => ({ ...p, accessToken: e.target.value }))}
+              placeholder="EAABqq..."
+              className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+            />
+            <p className="text-xs text-zinc-500">
+              Meta Business → Usuarios del Sistema → Token de acceso permanente.
+            </p>
+          </div>
+        </>
       )}
 
       {/* Agent assignment */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-zinc-300">
-          Agente asignado
-        </label>
+        <label htmlFor="agentId" className="text-sm font-medium text-zinc-300">Agente asignado</label>
         <select
+          id="agentId"
           value={form.agentId ?? ""}
           onChange={(e) => setForm((p) => ({ ...p, agentId: e.target.value || null }))}
           className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-green-500"

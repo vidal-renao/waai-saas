@@ -10,6 +10,9 @@ export interface CreateConnectionData {
   provider?: "mock" | "whapi" | "meta";
   displayName: string;
   phoneNumber?: string;
+  phoneNumberId?: string;
+  wabaId?: string;
+  accessToken?: string;
   externalInstanceId?: string;
   agentId?: string | null;
 }
@@ -35,6 +38,9 @@ export async function createWhatsappConnectionUseCase(
     provider: data.provider,
     displayName: data.displayName,
     phoneNumber: data.phoneNumber,
+    phoneNumberId: data.phoneNumberId,
+    wabaId: data.wabaId,
+    accessToken: data.accessToken,
     externalInstanceId: data.externalInstanceId,
     agentId: data.agentId ?? null,
   });

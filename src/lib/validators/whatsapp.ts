@@ -3,9 +3,12 @@ import { z } from "zod";
 export const WHATSAPP_PROVIDERS = ["mock", "whapi", "meta"] as const;
 
 export const createConnectionSchema = z.object({
-  provider: z.enum(WHATSAPP_PROVIDERS).default("whapi"),
+  provider: z.enum(WHATSAPP_PROVIDERS).default("meta"),
   displayName: z.string().min(1, "El nombre es obligatorio").max(100),
   phoneNumber: z.string().max(20).optional(),
+  phoneNumberId: z.string().max(200).optional(),
+  wabaId: z.string().max(200).optional(),
+  accessToken: z.string().max(2000).optional(),
   externalInstanceId: z.string().max(200).optional(),
   agentId: z.string().uuid().nullable().optional(),
 });

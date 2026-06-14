@@ -17,6 +17,9 @@ export interface CreateConnectionInput {
   provider?: WaaiWhatsappProvider;
   displayName?: string | null;
   phoneNumber?: string | null;
+  phoneNumberId?: string | null;
+  wabaId?: string | null;
+  accessToken?: string | null;
   externalInstanceId?: string | null;
   webhookSecretHash?: string | null;
   createdBy?: string | null;
@@ -94,17 +97,23 @@ export class WhatsappConnectionRepository {
   }
 
   async create(input: CreateConnectionInput): Promise<WaaiWhatsappConnection> {
+    const providerMetadata: Record<string, unknown> = {};
+    if (input.wabaId) providerMetadata.waba_id = input.wabaId;
+    if (input.accessToken) providerMetadata.access_token = input.accessToken;
+
     const { data, error } = await this.db
       .from("waai_whatsapp_connections")
       .insert({
         workspace_id: input.workspaceId,
         agent_id: input.agentId ?? null,
-        provider: input.provider ?? "whapi",
+        provider: input.provider ?? "meta",
         display_name: input.displayName ?? null,
         phone_number: input.phoneNumber ?? null,
+        phone_number_id: input.phoneNumberId ?? null,
         external_instance_id: input.externalInstanceId ?? null,
         webhook_secret_hash: input.webhookSecretHash ?? null,
         created_by: input.createdBy ?? null,
+        provider_metadata: providerMetadata,
         status: "draft",
       })
       .select()
