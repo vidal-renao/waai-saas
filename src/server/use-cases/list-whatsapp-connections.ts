@@ -31,7 +31,7 @@ export async function listWhatsappConnectionsUseCase(
   });
 
   const isDev = process.env.NODE_ENV === "development";
-  const forceBypass = process.env.NEXT_PUBLIC_BYPASS_WHATSAPP_LIMIT === "true";
+  const forceBypass = process.env.BYPASS_WHATSAPP_LIMIT === "true";
 
   return {
     connections,

@@ -19,7 +19,7 @@ export default async function WhatsappPage() {
 
   const bypassLimit =
     process.env.NODE_ENV === "development" ||
-    process.env.NEXT_PUBLIC_BYPASS_WHATSAPP_LIMIT === "true";
+    process.env.BYPASS_WHATSAPP_LIMIT === "true";
 
   const { connections, canCreate: canCreateFromPlan, connectionCount } = data;
   const canCreate = bypassLimit ? true : canCreateFromPlan;

@@ -50,7 +50,7 @@ export class WhatsappConnectionService {
 
     const bypassLimit =
       process.env.NODE_ENV === "development" ||
-      process.env.NEXT_PUBLIC_BYPASS_WHATSAPP_LIMIT === "true";
+      process.env.BYPASS_WHATSAPP_LIMIT === "true";
 
     if (!bypassLimit) {
       const { data: canCreate } = await this.db.rpc(
