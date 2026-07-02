@@ -1,0 +1,57 @@
+name: CI
+
+# Quality gate for WAAI. Runs on every PR and on pushes to the main branches.
+# A deploy must never reach production with a type error or lint failure
+# (DEBT-018). The production deploy workflow depends on this passing.
+
+on:
+  push:
+    branches:
+      - main
+      - "release/**"
+  pull_request:
+    branches:
+      - main
+      - "release/**"
+
+# Cancel superseded runs on the same ref to save CI minutes.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Type-check · Lint · Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: waai-saas
+    # Build-time env. These are non-secret placeholders that satisfy client
+    # creation at build; real values are injected by Vercel at deploy time.
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key
+      SUPABASE_SERVICE_ROLE_KEY: placeholder-service-role-key
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: waai-saas/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm run test
+
+      - name: Build
+        run: npm run build
