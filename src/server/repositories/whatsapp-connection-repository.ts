@@ -5,6 +5,7 @@ import type {
   WaaiWhatsappConnectionStatus,
   WaaiWhatsappProvider,
 } from "@/types/database";
+import { encryptSecret, decryptSecret } from "@/lib/security/encryption";
 
 type ConnectionUpdateRow =
   Database["public"]["Tables"]["waai_whatsapp_connections"]["Update"];
@@ -99,7 +100,11 @@ export class WhatsappConnectionRepository {
   async create(input: CreateConnectionInput): Promise<WaaiWhatsappConnection> {
     const providerMetadata: Record<string, unknown> = {};
     if (input.wabaId) providerMetadata.waba_id = input.wabaId;
-    if (input.accessToken) providerMetadata.access_token = input.accessToken;
+    // Encrypt the provider access token at rest (AES-256-GCM). It is only
+    // ever read back through getAccessToken(), which decrypts it. (DEBT-002)
+    if (input.accessToken) {
+      providerMetadata.access_token = encryptSecret(input.accessToken);
+    }
 
     const { data, error } = await this.db
       .from("waai_whatsapp_connections")
@@ -146,6 +151,20 @@ export class WhatsappConnectionRepository {
     if (error)
       throw new Error(`WhatsappConnectionRepository.update: ${error.message}`);
     return data;
+  }
+
+  /**
+   * Return the decrypted provider access token for a connection, or null when
+   * none is stored. Tolerates legacy plaintext values (pre-DEBT-002 rows) so
+   * reads keep working before the migration has run. This is the only
+   * supported way to read the token — callers must never read
+   * provider_metadata.access_token directly.
+   */
+  getAccessToken(connection: WaaiWhatsappConnection): string | null {
+    const meta = connection.provider_metadata as Record<string, unknown> | null;
+    const raw = meta?.access_token;
+    if (typeof raw !== "string" || raw.length === 0) return null;
+    return decryptSecret(raw);
   }
 
   async updateStatus(id: string, status: WaaiWhatsappConnectionStatus): Promise<void> {

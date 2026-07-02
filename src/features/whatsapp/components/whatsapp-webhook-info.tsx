@@ -46,8 +46,8 @@ export function WhatsappWebhookInfo({
         </p>
         <ol className="text-xs text-zinc-500 space-y-1 list-decimal list-inside">
           <li>Ve a Meta Business → WhatsApp → Configuración API</li>
-          <li>En "Webhooks", pega la URL anterior como URL de devolución de llamada</li>
-          <li>Introduce el token de verificación y haz clic en "Verificar y guardar"</li>
+          <li>En &laquo;Webhooks&raquo;, pega la URL anterior como URL de devolución de llamada</li>
+          <li>Introduce el token de verificación y haz clic en &laquo;Verificar y guardar&raquo;</li>
           <li>Activa el campo de suscripción: <code className="text-zinc-400">messages</code></li>
           <li>Guarda y envía un mensaje de prueba desde Meta</li>
         </ol>

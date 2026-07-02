@@ -11,6 +11,7 @@ import { WhatsappMessageService } from "@/server/services/whatsapp-message-servi
 import { LeadDetectionService } from "@/server/services/lead-detection-service";
 import { createWhatsAppProvider } from "@/lib/whatsapp/whatsapp-provider-factory";
 import type { VerifyWebhookInput } from "@/lib/whatsapp/types";
+import { reportError } from "@/lib/observability/report-error";
 
 type Client = SupabaseClient<Database>;
 
@@ -86,8 +87,10 @@ export class WhatsappWebhookService {
         rawPayload: payload,
         direction: "inbound",
       });
-    } catch {
-      // If persistence fails, still return ok to prevent Whapi retries
+    } catch (err) {
+      // If persistence fails, still return ok to prevent Whapi retries, but
+      // surface it — a failing event store means we are dropping inbound data.
+      reportError(err, { scope: "whatsapp_webhook.persist_event" });
       return { status: "failed", errorMessage: "event_persistence_failed" };
     }
 
@@ -311,8 +314,14 @@ export class WhatsappWebhookService {
       agentId: connection.agent_id,
       conversationId: conversation.id,
       channel: "whatsapp",
-    }).catch(() => {
-      // Silently ignore — detection must never break the webhook response
+    }).catch((err) => {
+      // Detection must never break the webhook response, but the failure is
+      // still reported for visibility (non-blocking).
+      reportError(err, {
+        scope: "whatsapp_webhook.lead_detection",
+        workspaceId: connection.workspace_id,
+        conversationId: conversation.id,
+      });
     });
     // ────────────────────────────────────────────────────────────────────────
 
