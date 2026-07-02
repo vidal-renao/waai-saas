@@ -1,12 +1,34 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createMiddlewareClient } from "@/lib/supabase/middleware";
+import {
+  buildContentSecurityPolicy,
+  generateNonce,
+} from "@/lib/security/content-security-policy";
 
 const AUTH_ROUTES = ["/login", "/register"];
 const PROTECTED_ROUTES = ["/dashboard", "/onboarding"];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const response = NextResponse.next({ request });
+
+  // Per-request CSP nonce. It must be readable by the RSC render (via the
+  // forwarded request header) AND returned to the browser (via the response
+  // header) so Next.js can stamp its inline framework scripts with the nonce.
+  const nonce = generateNonce();
+  const csp = buildContentSecurityPolicy(nonce);
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-nonce", nonce);
+  requestHeaders.set("content-security-policy", csp);
+
+  // Apply the CSP to any response leaving this middleware (main pass-through
+  // and every redirect branch), keeping the policy consistent across the app.
+  const withCsp = <T extends NextResponse>(res: T): T => {
+    res.headers.set("content-security-policy", csp);
+    return res;
+  };
+
+  const response = NextResponse.next({ request: { headers: requestHeaders } });
   const supabase = createMiddlewareClient(request, response);
 
   const {
@@ -20,7 +42,7 @@ export async function proxy(request: NextRequest) {
 
   // Unauthenticated → redirect to login for protected routes
   if (!user && isProtectedRoute) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return withCsp(NextResponse.redirect(new URL("/login", request.url)));
   }
 
   // Authenticated on auth pages → check workspace and redirect
@@ -33,11 +55,13 @@ export async function proxy(request: NextRequest) {
       .single();
 
     if (member) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+      return withCsp(NextResponse.redirect(new URL("/dashboard", request.url)));
     }
     // No workspace on login → send to onboarding
     if (pathname.startsWith("/login")) {
-      return NextResponse.redirect(new URL("/onboarding", request.url));
+      return withCsp(
+        NextResponse.redirect(new URL("/onboarding", request.url))
+      );
     }
   }
 
@@ -51,7 +75,7 @@ export async function proxy(request: NextRequest) {
       .single();
 
     if (member) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+      return withCsp(NextResponse.redirect(new URL("/dashboard", request.url)));
     }
   }
 
@@ -65,11 +89,13 @@ export async function proxy(request: NextRequest) {
       .single();
 
     if (!member) {
-      return NextResponse.redirect(new URL("/onboarding", request.url));
+      return withCsp(
+        NextResponse.redirect(new URL("/onboarding", request.url))
+      );
     }
   }
 
-  return response;
+  return withCsp(response);
 }
 
 export const config = {
