@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { loginSchema, type LoginSchema } from "@/lib/validators/auth";
 import { Button } from "@/components/ui/button";
@@ -71,6 +72,12 @@ export function LoginForm() {
         {errors.password && (
           <p className="text-xs text-red-400">{errors.password.message}</p>
         )}
+        <Link
+          href="/forgot-password"
+          className="self-end text-xs text-zinc-400 hover:text-green-300"
+        >
+          ¿Olvidaste tu contraseña?
+        </Link>
       </div>
 
       {serverError && (
