@@ -11,5 +11,12 @@ export const billingCostsQuerySchema = z.object({
   to: z.string().datetime({ offset: true }).optional(),
 });
 
+// Only self-serve plans can be purchased through Checkout.
+export const checkoutSchema = z.object({
+  planId: z.enum(["starter", "pro", "agency"]),
+});
+
+export type CheckoutInput = z.infer<typeof checkoutSchema>;
+
 export type BillingUsageQuery = z.infer<typeof billingUsageQuerySchema>;
 export type BillingCostsQuery = z.infer<typeof billingCostsQuerySchema>;

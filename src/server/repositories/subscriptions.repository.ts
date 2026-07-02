@@ -4,12 +4,26 @@ import type {
   WaaiSubscription,
   WaaiPlan,
   WaaiPlanId,
+  WaaiSubscriptionStatus,
 } from "@/types/database";
 
 type Client = SupabaseClient<Database>;
 
 export interface SubscriptionWithPlan extends WaaiSubscription {
   plan: WaaiPlan;
+}
+
+// Stripe-derived subscription state persisted from webhooks. All fields
+// optional so callers patch only what changed.
+export interface StripeSubscriptionState {
+  planId?: WaaiPlanId;
+  stripeCustomerId?: string | null;
+  stripeSubscriptionId?: string | null;
+  stripePriceId?: string | null;
+  status?: WaaiSubscriptionStatus;
+  cancelAtPeriodEnd?: boolean;
+  currentPeriodStart?: string | null;
+  currentPeriodEnd?: string | null;
 }
 
 export class SubscriptionsRepository {
@@ -35,6 +49,58 @@ export class SubscriptionsRepository {
     if (planError || !plan) return null;
 
     return { ...sub, plan };
+  }
+
+  async findByStripeCustomerId(
+    customerId: string
+  ): Promise<WaaiSubscription | null> {
+    const { data, error } = await this.db
+      .from("waai_subscriptions")
+      .select("*")
+      .eq("stripe_customer_id", customerId)
+      .single();
+    if (error || !data) return null;
+    return data;
+  }
+
+  /**
+   * Persist Stripe-derived state onto a workspace's subscription. Idempotent:
+   * applying the same webhook twice yields the same row. Only provided fields
+   * are patched (undefined = leave unchanged).
+   */
+  async updateStripeState(
+    workspaceId: string,
+    state: StripeSubscriptionState
+  ): Promise<WaaiSubscription> {
+    const patch: Database["public"]["Tables"]["waai_subscriptions"]["Update"] = {
+      updated_at: new Date().toISOString(),
+    };
+    if (state.planId !== undefined) patch.plan_id = state.planId;
+    if (state.stripeCustomerId !== undefined)
+      patch.stripe_customer_id = state.stripeCustomerId;
+    if (state.stripeSubscriptionId !== undefined)
+      patch.stripe_subscription_id = state.stripeSubscriptionId;
+    if (state.stripePriceId !== undefined)
+      patch.stripe_price_id = state.stripePriceId;
+    if (state.status !== undefined) patch.status = state.status;
+    if (state.cancelAtPeriodEnd !== undefined)
+      patch.cancel_at_period_end = state.cancelAtPeriodEnd;
+    if (state.currentPeriodStart !== undefined)
+      patch.current_period_start = state.currentPeriodStart;
+    if (state.currentPeriodEnd !== undefined)
+      patch.current_period_end = state.currentPeriodEnd;
+
+    const { data, error } = await this.db
+      .from("waai_subscriptions")
+      .update(patch)
+      .eq("workspace_id", workspaceId)
+      .select()
+      .single();
+    if (error)
+      throw new Error(
+        `SubscriptionsRepository.updateStripeState: ${error.message}`
+      );
+    return data;
   }
 
   async getAllPlans(): Promise<WaaiPlan[]> {

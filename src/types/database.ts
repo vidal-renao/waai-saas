@@ -128,6 +128,17 @@ export type WaaiPlanId =
   | "agency"
   | "enterprise";
 
+// Mirrors Stripe subscription statuses we persist (see billing migration).
+export type WaaiSubscriptionStatus =
+  | "active"
+  | "trialing"
+  | "past_due"
+  | "canceled"
+  | "incomplete"
+  | "incomplete_expired"
+  | "unpaid"
+  | "paused";
+
 // Exact shape required by @supabase/supabase-js generics.
 // Each table must have Row, Insert, Update, Relationships.
 // Insert/Update cannot be `never` — use empty mapped type `{ [K in never]: never }` for append-only tables.
@@ -242,6 +253,10 @@ export interface Database {
           plan_id: WaaiPlanId;
           stripe_customer_id: string | null;
           stripe_subscription_id: string | null;
+          stripe_price_id: string | null;
+          status: WaaiSubscriptionStatus;
+          cancel_at_period_end: boolean;
+          current_period_start: string | null;
           current_period_end: string | null;
           created_at: string;
           updated_at: string;
@@ -252,6 +267,10 @@ export interface Database {
           plan_id?: WaaiPlanId;
           stripe_customer_id?: string | null;
           stripe_subscription_id?: string | null;
+          stripe_price_id?: string | null;
+          status?: WaaiSubscriptionStatus;
+          cancel_at_period_end?: boolean;
+          current_period_start?: string | null;
           current_period_end?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -260,6 +279,10 @@ export interface Database {
           plan_id?: WaaiPlanId;
           stripe_customer_id?: string | null;
           stripe_subscription_id?: string | null;
+          stripe_price_id?: string | null;
+          status?: WaaiSubscriptionStatus;
+          cancel_at_period_end?: boolean;
+          current_period_start?: string | null;
           current_period_end?: string | null;
           updated_at?: string;
         };
