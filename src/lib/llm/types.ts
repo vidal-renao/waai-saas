@@ -5,6 +5,13 @@ export interface LLMMessage {
 
 export interface LLMInput {
   systemPrompt: string;
+  /**
+   * Optional stable system prefix (agent persona / Layer 1). When provided,
+   * providers that support prompt caching mark this block as cacheable and
+   * append `systemPrompt` after it as the dynamic (per-message) remainder.
+   * When omitted, `systemPrompt` is used as the full, uncached system prompt.
+   */
+  cacheableSystemPrompt?: string;
   messages: LLMMessage[];
   model?: string;
   temperature?: number;

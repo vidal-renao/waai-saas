@@ -12,6 +12,8 @@ import { MessageRepository } from "@/server/repositories/message-repository";
 import { AgentRunRepository } from "@/server/repositories/agent-run-repository";
 import { createLLMProvider } from "@/lib/llm/llm-provider";
 import { RagRetrievalService } from "@/server/services/rag-retrieval-service";
+import { AiCostService } from "@/server/services/ai-cost-service";
+import { reportError } from "@/lib/observability/report-error";
 import type { LLMMessage, LLMProvider } from "@/lib/llm/types";
 import type { RagContext } from "@/lib/rag/rag-types";
 
@@ -41,6 +43,7 @@ export interface RuntimeOutput {
     outputTokens: number;
     latencyMs: number;
     model: string;
+    estimatedCostCents: number;
     metadata: Record<string, unknown>;
   };
 }
@@ -72,6 +75,7 @@ export class AgentRuntimeService {
   private readonly msgRepo: MessageRepository;
   private readonly runRepo: AgentRunRepository;
   private readonly ragService: RagRetrievalService;
+  private readonly costService: AiCostService;
 
   constructor(private readonly db: Client) {
     this.agentRepo = new AgentRepository(db);
@@ -80,6 +84,7 @@ export class AgentRuntimeService {
     this.msgRepo = new MessageRepository(db);
     this.runRepo = new AgentRunRepository(db);
     this.ragService = new RagRetrievalService(db);
+    this.costService = new AiCostService();
   }
 
   async processMessage(
@@ -215,7 +220,9 @@ export class AgentRuntimeService {
       ragMetadata = { rag_used: false, rag_error: "retrieval_error" };
     }
 
-    const systemPrompt = buildSystemPrompt(activePrompt.system_prompt, ragContext);
+    // Persona is stable across turns → cacheable (Layer 1, prompt caching).
+    // RAG knowledge varies per message → dynamic remainder appended after.
+    const ragSystemBlock = buildRagSystemBlock(ragContext);
 
     // 9. Fetch conversation history
     const history = await this.msgRepo.findByConversation(conversationId, 20);
@@ -228,11 +235,21 @@ export class AgentRuntimeService {
     let llmOutput: Awaited<ReturnType<LLMProvider["generateResponse"]>>;
     try {
       llmOutput = await provider.generateResponse({
-        systemPrompt,
+        cacheableSystemPrompt: activePrompt.system_prompt,
+        systemPrompt: ragSystemBlock,
         messages: llmMessages,
       });
     } catch (err) {
       const latencyMs = Date.now() - callStart;
+      // Transient/retryable failures have already been retried in the provider;
+      // reaching here means the run genuinely failed — capture for alerting.
+      reportError(err, {
+        scope: "agent_runtime.llm_generate",
+        workspaceId: input.workspaceId,
+        agentId: input.agentId,
+        conversationId,
+        channel: input.channel,
+      });
       await this.runRepo.create({
         workspaceId: input.workspaceId,
         agentId: input.agentId,
@@ -264,7 +281,14 @@ export class AgentRuntimeService {
       },
     });
 
-    // 12. Save agent run
+    // 12. Estimate AI cost and save agent run.
+    // Cost is computed from the model + token usage so every run has a
+    // non-null estimated_cost_cents for billing and budget enforcement.
+    const cost = this.costService.estimateCost(
+      llmOutput.model,
+      llmOutput.inputTokens,
+      llmOutput.outputTokens
+    );
     const run = await this.runRepo.create({
       workspaceId: input.workspaceId,
       agentId: input.agentId,
@@ -275,6 +299,7 @@ export class AgentRuntimeService {
       inputTokens: llmOutput.inputTokens,
       outputTokens: llmOutput.outputTokens,
       totalTokens: llmOutput.totalTokens,
+      estimatedCostCents: cost.estimated_cost_cents,
       status: "success",
       latencyMs: (llmOutput.rawMetadata.latency_ms as number) ?? null,
       metadata: { ...llmOutput.rawMetadata, ...ragMetadata, channel: input.channel },
@@ -300,25 +325,23 @@ export class AgentRuntimeService {
         outputTokens: run.output_tokens ?? 0,
         latencyMs: run.latency_ms ?? 0,
         model: run.model,
+        estimatedCostCents: run.estimated_cost_cents ?? cost.estimated_cost_cents,
         metadata: run.metadata,
       },
     };
   }
 }
 
-// Inject RAG context into the system prompt when knowledge is available.
+// Build the dynamic RAG portion of the system prompt (Layer 2). Returns an
+// empty string when no knowledge is retrieved, so it can be appended after the
+// cacheable persona layer without affecting the cache key.
 // See docs/prompts/03-rag-context-injection.md
-function buildSystemPrompt(
-  basePrompt: string,
-  ragContext: RagContext | null
-): string {
+function buildRagSystemBlock(ragContext: RagContext | null): string {
   if (!ragContext || !ragContext.ragUsed || !ragContext.contextText) {
-    return basePrompt;
+    return "";
   }
 
-  return `${basePrompt}
-
-<business_knowledge>
+  return `<business_knowledge>
 A continuación encontrarás información real del negocio recuperada de la base de conocimiento.
 Úsala SOLO si es relevante para responder la pregunta del usuario.
 
