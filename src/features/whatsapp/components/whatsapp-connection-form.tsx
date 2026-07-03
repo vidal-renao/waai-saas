@@ -6,9 +6,10 @@ import type { WaaiAgent } from "@/types/database";
 
 interface Props {
   agents: WaaiAgent[];
+  showMockProvider?: boolean;
 }
 
-export function WhatsappConnectionForm({ agents }: Props) {
+export function WhatsappConnectionForm({ agents, showMockProvider = false }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -74,32 +75,34 @@ export function WhatsappConnectionForm({ agents }: Props) {
         </div>
       )}
 
-      {/* Provider */}
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="provider" className="text-sm font-medium text-zinc-300">Proveedor</label>
-        <select
-          id="provider"
-          value={form.provider}
-          onChange={(e) =>
-            setForm((p) => ({ ...p, provider: e.target.value as "mock" | "meta" }))
-          }
-          className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-green-500"
-        >
-          <option value="meta">Meta Cloud API (Oficial)</option>
-          <option value="mock">Mock (desarrollo local)</option>
-        </select>
-      </div>
+      {/* Provider — Mock option only visible in development */}
+      {showMockProvider && (
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="provider" className="text-sm font-medium text-zinc-300">Connection type</label>
+          <select
+            id="provider"
+            value={form.provider}
+            onChange={(e) =>
+              setForm((p) => ({ ...p, provider: e.target.value as "mock" | "meta" }))
+            }
+            className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-green-500"
+          >
+            <option value="meta">WhatsApp Business (Official)</option>
+            <option value="mock">Mock (dev only)</option>
+          </select>
+        </div>
+      )}
 
       {/* Display name */}
       <div className="flex flex-col gap-1.5">
         <label className="text-sm font-medium text-zinc-300">
-          Nombre de la conexión <span className="text-red-400">*</span>
+          Connection name <span className="text-red-400">*</span>
         </label>
         <input
           type="text"
           value={form.displayName}
           onChange={(e) => setForm((p) => ({ ...p, displayName: e.target.value }))}
-          placeholder="Ej: WhatsApp Negocio Principal"
+          placeholder="e.g. Main Business WhatsApp"
           className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-green-500"
           required
         />
@@ -107,20 +110,26 @@ export function WhatsappConnectionForm({ agents }: Props) {
 
       {/* Phone number */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-zinc-300">Número de teléfono</label>
+        <label className="text-sm font-medium text-zinc-300">Phone number</label>
         <input
           type="text"
           value={form.phoneNumber}
           onChange={(e) => setForm((p) => ({ ...p, phoneNumber: e.target.value }))}
-          placeholder="Ej: 34612345678"
+          placeholder="e.g. 41791234567"
           className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-green-500"
         />
-        <p className="text-xs text-zinc-500">Con código de país, sin el símbolo +.</p>
+        <p className="text-xs text-zinc-500">Country code without the + symbol.</p>
       </div>
 
       {/* Meta-specific fields */}
       {form.provider === "meta" && (
         <>
+          <div className="rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-3 text-xs text-zinc-400 mb-1">
+            You&apos;ll find these values in{" "}
+            <strong className="text-zinc-300">Meta Business Suite → WhatsApp → API Setup</strong>.
+            Need help? Contact our support team and we&apos;ll guide you through it.
+          </div>
+
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-zinc-300">
               Phone Number ID <span className="text-red-400">*</span>
@@ -129,33 +138,30 @@ export function WhatsappConnectionForm({ agents }: Props) {
               type="text"
               value={form.phoneNumberId}
               onChange={(e) => setForm((p) => ({ ...p, phoneNumberId: e.target.value }))}
-              placeholder="Ej: 123456789012345"
+              placeholder="e.g. 123456789012345"
               className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-green-500"
             />
             <p className="text-xs text-zinc-500">
-              Meta Business → WhatsApp → Configuración API → Phone Number ID.
+              Found in Meta Business Suite under WhatsApp → API Setup.
             </p>
           </div>
 
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-zinc-300">
-              WhatsApp Business Account ID (WABA ID)
+              WhatsApp Business Account ID
             </label>
             <input
               type="text"
               value={form.wabaId}
               onChange={(e) => setForm((p) => ({ ...p, wabaId: e.target.value }))}
-              placeholder="Ej: 987654321098765"
+              placeholder="e.g. 987654321098765"
               className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-green-500"
             />
-            <p className="text-xs text-zinc-500">
-              Meta Business → WhatsApp → Configuración → WABA ID.
-            </p>
           </div>
 
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-zinc-300">
-              Permanent Access Token
+              Access Token
             </label>
             <input
               type="password"
@@ -165,7 +171,7 @@ export function WhatsappConnectionForm({ agents }: Props) {
               className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-green-500"
             />
             <p className="text-xs text-zinc-500">
-              Meta Business → Usuarios del Sistema → Token de acceso permanente.
+              Your token is encrypted at rest and never shared.
             </p>
           </div>
         </>
@@ -173,14 +179,14 @@ export function WhatsappConnectionForm({ agents }: Props) {
 
       {/* Agent assignment */}
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="agentId" className="text-sm font-medium text-zinc-300">Agente asignado</label>
+        <label htmlFor="agentId" className="text-sm font-medium text-zinc-300">AI Employee</label>
         <select
           id="agentId"
           value={form.agentId ?? ""}
           onChange={(e) => setForm((p) => ({ ...p, agentId: e.target.value || null }))}
           className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-green-500"
         >
-          <option value="">Sin agente (asignar después)</option>
+          <option value="">No AI Employee assigned (assign later)</option>
           {activeAgents.map((a) => (
             <option key={a.id} value={a.id}>
               {a.name}
@@ -189,7 +195,7 @@ export function WhatsappConnectionForm({ agents }: Props) {
         </select>
         {activeAgents.length === 0 && (
           <p className="text-xs text-yellow-400">
-            No hay agentes activos. Crea y activa un agente primero.
+            No active AI Employees. Create and activate one first.
           </p>
         )}
       </div>
@@ -199,7 +205,7 @@ export function WhatsappConnectionForm({ agents }: Props) {
         disabled={loading}
         className="rounded-lg bg-green-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-green-600 disabled:opacity-50 transition-colors"
       >
-        {loading ? "Creando…" : "Crear conexión"}
+        {loading ? "Connecting…" : "Connect WhatsApp"}
       </button>
     </form>
   );

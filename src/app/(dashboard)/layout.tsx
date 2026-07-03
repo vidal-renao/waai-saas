@@ -26,32 +26,32 @@ export default async function DashboardLayout({
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-green-500">
             <span className="text-xs font-bold text-white">W</span>
           </div>
-          <span className="text-sm font-medium text-white">WAAI SaaS</span>
+          <span className="text-sm font-medium text-white">WAAI</span>
         </div>
         <nav className="flex items-center gap-4">
           <Link
             href="/dashboard"
             className="text-sm text-zinc-400 hover:text-white"
           >
-            Dashboard
+            Home
           </Link>
           <Link
             href="/dashboard/agents"
             className="text-sm text-zinc-400 hover:text-white"
           >
-            Agentes
+            AI Employees
           </Link>
           <Link
             href="/dashboard/conversations"
             className="text-sm text-zinc-400 hover:text-white"
           >
-            Conversaciones
+            Inbox
           </Link>
           <Link
             href="/dashboard/knowledge"
             className="text-sm text-zinc-400 hover:text-white"
           >
-            Knowledge
+            Company Knowledge
           </Link>
           <Link
             href="/dashboard/whatsapp"
@@ -82,7 +82,7 @@ export default async function DashboardLayout({
               type="submit"
               className="text-sm text-zinc-400 hover:text-white"
             >
-              Salir
+              Sign Out
             </button>
           </form>
         </nav>

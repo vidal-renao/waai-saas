@@ -32,7 +32,7 @@ export default async function AgentSandboxPage({
     return (
       <div className="mx-auto max-w-2xl">
         <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-8 text-center">
-          <p className="text-zinc-400">No tienes permisos para usar el sandbox.</p>
+          <p className="text-zinc-400">You don&apos;t have permission to access AI Testing.</p>
         </div>
       </div>
     );
@@ -69,16 +69,16 @@ export default async function AgentSandboxPage({
             ← {agent.name}
           </Link>
           <h1 className="mt-1 text-xl font-bold text-white">
-            Sandbox · Modo prueba
+            AI Testing
           </h1>
         </div>
         <div className="flex items-center gap-2">
           <span className="rounded-full border border-yellow-800 bg-yellow-950/30 px-3 py-1 text-xs font-medium text-yellow-400">
-            Solo pruebas — no es WhatsApp real
+            Test environment — not live on WhatsApp
           </span>
           {linkedKbCount > 0 && ragConfigured && (
             <span className="rounded-full border border-blue-900/50 bg-blue-950/20 px-3 py-1 text-xs font-medium text-blue-400">
-              RAG activo · {linkedKbCount} doc{linkedKbCount !== 1 ? "s" : ""}
+              Company Knowledge active · {linkedKbCount} doc{linkedKbCount !== 1 ? "s" : ""}
             </span>
           )}
         </div>
@@ -87,21 +87,19 @@ export default async function AgentSandboxPage({
       {/* Warnings */}
       {!apiKeyConfigured && (
         <div className="mb-4 rounded-xl border border-red-800 bg-red-950/20 p-4 text-sm text-red-400">
-          <strong>Sin API key:</strong> La variable{" "}
-          <code className="rounded bg-red-950/40 px-1">ANTHROPIC_API_KEY</code>{" "}
-          no está configurada. El sandbox no puede procesar mensajes.
+          <strong>AI not available:</strong> The AI service is not configured.
+          Please contact support.
         </div>
       )}
 
       {!activePrompt && (
         <div className="mb-4 rounded-xl border border-yellow-800 bg-yellow-950/20 p-4 text-sm text-yellow-400">
-          <strong>Sin prompt activo:</strong> Este agente no tiene un system
-          prompt generado.{" "}
+          <strong>No AI Instructions set:</strong> This AI Employee has no instructions yet.{" "}
           <Link
             href={`/dashboard/agents/${agentId}/prompt`}
             className="underline hover:text-yellow-300"
           >
-            Genera uno primero
+            Generate AI Instructions first
           </Link>
           .
         </div>
@@ -109,7 +107,7 @@ export default async function AgentSandboxPage({
 
       {!conversationId && (
         <div className="mb-4 rounded-xl border border-red-800 bg-red-950/20 p-4 text-sm text-red-400">
-          No se pudo iniciar la conversación. Recarga la página para intentarlo de nuevo.
+          Could not start the test chat. Reload the page to try again.
         </div>
       )}
 
@@ -124,13 +122,12 @@ export default async function AgentSandboxPage({
         </div>
       ) : (
         <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-8 text-center">
-          <p className="text-zinc-400">No se pudo iniciar la conversación.</p>
+          <p className="text-zinc-400">Could not start the test chat. Please reload.</p>
         </div>
       )}
 
       <p className="mt-3 text-center text-xs text-zinc-600">
-        Los mensajes de sandbox se guardan con fines de auditoría.
-        Cada mensaje consume cuota del plan.
+        Test messages are saved for audit purposes and count toward your plan.
       </p>
     </div>
   );

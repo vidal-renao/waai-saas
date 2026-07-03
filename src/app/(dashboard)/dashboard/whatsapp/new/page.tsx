@@ -26,7 +26,7 @@ export default async function NewWhatsappConnectionPage() {
     return (
       <div className="mx-auto max-w-2xl">
         <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-8 text-center">
-          <p className="text-zinc-400">No tienes permisos para crear conexiones WhatsApp.</p>
+          <p className="text-zinc-400">You don&apos;t have permission to create WhatsApp connections.</p>
         </div>
       </div>
     );
@@ -46,10 +46,10 @@ export default async function NewWhatsappConnectionPage() {
       return (
         <div className="mx-auto max-w-2xl">
           <div className="rounded-xl border border-yellow-800 bg-yellow-950/20 p-8 text-center">
-            <p className="text-yellow-400 font-medium">Límite de plan alcanzado</p>
+            <p className="text-yellow-400 font-medium">Connection limit reached</p>
             <p className="mt-2 text-sm text-zinc-400">
-              Has alcanzado el límite de conexiones WhatsApp de tu plan actual.
-              Actualiza para añadir más.
+              You&apos;ve reached the WhatsApp connection limit on your current plan.
+              Upgrade to add more.
             </p>
           </div>
         </div>
@@ -71,15 +71,18 @@ export default async function NewWhatsappConnectionPage() {
           ← WhatsApp
         </Link>
         <h1 className="mt-2 text-2xl font-bold text-white">
-          Nueva conexión WhatsApp
+          Connect WhatsApp
         </h1>
         <p className="mt-1 text-sm text-zinc-400">
-          Conecta tu número de WhatsApp y asigna un agente de IA.
+          Link your WhatsApp Business number and assign an AI Employee to handle conversations.
         </p>
       </div>
 
       <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6">
-        <WhatsappConnectionForm agents={agents} />
+        <WhatsappConnectionForm
+          agents={agents}
+          showMockProvider={process.env.NODE_ENV === "development"}
+        />
       </div>
     </div>
   );

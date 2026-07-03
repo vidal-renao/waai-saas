@@ -107,7 +107,7 @@ export function ChatWindow({ agentId, agentName, conversationId }: ChatWindowPro
         </div>
         <div>
           <p className="text-sm font-medium text-white">{agentName}</p>
-          <p className="text-xs text-zinc-500">Modo sandbox · Solo para pruebas</p>
+          <p className="text-xs text-zinc-500">AI Testing · Test environment</p>
         </div>
       </div>
 
@@ -121,8 +121,8 @@ export function ChatWindow({ agentId, agentName, conversationId }: ChatWindowPro
         </div>
       )}
 
-      {/* Last run metadata */}
-      {lastRun && (
+      {/* Debug metadata — internal only, hidden from customers */}
+      {lastRun && process.env.NODE_ENV === "development" && (
         <div className="mx-4 mb-2 flex flex-col gap-1">
           <AgentRunMetadata
             inputTokens={lastRun.inputTokens}

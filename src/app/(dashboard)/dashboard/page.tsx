@@ -10,11 +10,11 @@ import { getOperationalAlertsUseCase } from "@/server/use-cases/get-operational-
 import { OperationalAlertsPanel } from "@/features/analytics/components/operational-alerts-panel";
 
 const ROLE_LABELS: Record<string, string> = {
-  owner: "Propietario",
-  admin: "Administrador",
-  agent_manager: "Gestor de Agentes",
-  human_agent: "Agente Humano",
-  viewer: "Observador",
+  owner: "Owner",
+  admin: "Admin",
+  agent_manager: "Manager",
+  human_agent: "Agent",
+  viewer: "Viewer",
 };
 
 function limitLabel(value: number): string {
@@ -42,11 +42,11 @@ export default async function DashboardPage() {
     <div className="mx-auto max-w-4xl">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-white">
-          Bienvenido, {data.profile.full_name ?? data.profile.email}
+          Welcome, {data.profile.full_name ?? data.profile.email}
         </h1>
         <p className="mt-1 text-zinc-400">
-          Workspace:{" "}
-          <span className="text-zinc-200">{data.workspace.name}</span> ·{" "}
+          <span className="text-zinc-200">{data.workspace.name}</span>
+          {" · "}
           <span className="text-zinc-400">
             {ROLE_LABELS[data.role] ?? data.role}
           </span>
@@ -57,22 +57,22 @@ export default async function DashboardPage() {
         {/* Plan card */}
         <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
           <p className="text-xs uppercase tracking-wider text-zinc-500">
-            Plan activo
+            Current Plan
           </p>
           <p className="mt-2 text-xl font-semibold text-white">
             {data.plan.name}
           </p>
           <p className="mt-1 text-sm text-zinc-400">
             {data.plan.human_handoff_enabled
-              ? "Human handoff activado"
-              : "Sin human handoff"}
+              ? "Human transfer enabled"
+              : "AI-only responses"}
           </p>
         </div>
 
         {/* Messages card */}
         <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
           <p className="text-xs uppercase tracking-wider text-zinc-500">
-            Mensajes este mes
+            Messages This Month
           </p>
           <p className="mt-2 text-xl font-semibold text-white">
             {data.usage.messages_sent}
@@ -85,7 +85,7 @@ export default async function DashboardPage() {
         {/* Agents card */}
         <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
           <p className="text-xs uppercase tracking-wider text-zinc-500">
-            Agentes creados
+            AI Employees
           </p>
           <p className="mt-2 text-xl font-semibold text-white">
             {data.usage.agents_created}
@@ -98,7 +98,7 @@ export default async function DashboardPage() {
         {/* Documents card */}
         <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
           <p className="text-xs uppercase tracking-wider text-zinc-500">
-            Documentos subidos
+            Documents
           </p>
           <p className="mt-2 text-xl font-semibold text-white">
             {data.usage.documents_uploaded}
@@ -111,7 +111,7 @@ export default async function DashboardPage() {
         {/* Workspace status card */}
         <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
           <p className="text-xs uppercase tracking-wider text-zinc-500">
-            Estado workspace
+            Account Status
           </p>
           <div className="mt-2 flex items-center gap-2">
             <span
@@ -123,8 +123,12 @@ export default async function DashboardPage() {
                     : "bg-zinc-400"
               }`}
             />
-            <span className="text-base font-medium capitalize text-white">
-              {data.workspace.status}
+            <span className="text-base font-medium text-white">
+              {data.workspace.status === "active"
+                ? "Active"
+                : data.workspace.status === "trial"
+                  ? "Trial"
+                  : "Inactive"}
             </span>
           </div>
         </div>
@@ -134,24 +138,24 @@ export default async function DashboardPage() {
           <>
             <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
               <p className="text-xs uppercase tracking-wider text-zinc-500">
-                Conversaciones (30d)
+                Conversations (30d)
               </p>
               <p className="mt-2 text-xl font-semibold text-white">
                 {analyticsResult.data.conversations_in_period}
               </p>
               <Link href="/dashboard/analytics" className="mt-1 block text-xs text-zinc-500 hover:text-zinc-300">
-                Ver analytics →
+                View Analytics →
               </Link>
             </div>
             <div className={`rounded-xl border p-5 ${analyticsResult.data.open_handoffs > 0 ? "border-yellow-800 bg-yellow-950/20" : "border-zinc-800 bg-zinc-900"}`}>
               <p className="text-xs uppercase tracking-wider text-zinc-500">
-                Handoffs activos
+                Waiting for You
               </p>
               <p className={`mt-2 text-xl font-semibold ${analyticsResult.data.open_handoffs > 0 ? "text-yellow-400" : "text-white"}`}>
                 {analyticsResult.data.open_handoffs}
               </p>
               <Link href="/dashboard/conversations" className="mt-1 block text-xs text-zinc-500 hover:text-zinc-300">
-                Ver conversaciones →
+                View Inbox →
               </Link>
             </div>
           </>
@@ -170,14 +174,14 @@ export default async function DashboardPage() {
         <div className="flex items-center justify-between gap-4">
           <div>
             <h2 className="text-base font-semibold text-white">
-              Agentes de WhatsApp
+              AI Employees
             </h2>
             <p className="mt-1 text-sm text-zinc-400">
               {agentsResult
-                ? `${agentsResult.limitCheck.current} agente${agentsResult.limitCheck.current !== 1 ? "s" : ""} creado${agentsResult.limitCheck.current !== 1 ? "s" : ""}`
-                : "Crea tu primer agente inteligente"}
+                ? `${agentsResult.limitCheck.current} AI Employee${agentsResult.limitCheck.current !== 1 ? "s" : ""} created`
+                : "Create your first AI Employee"}
               {agentsResult && agentsResult.limitCheck.limit !== -1
-                ? ` / ${agentsResult.limitCheck.limit} disponibles`
+                ? ` / ${agentsResult.limitCheck.limit} available`
                 : ""}
             </p>
           </div>
@@ -186,14 +190,14 @@ export default async function DashboardPage() {
               href="/dashboard/agents"
               className="rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors"
             >
-              Ver agentes
+              View AI Employees
             </Link>
             {(!agentsResult || agentsResult.limitCheck.allowed) && (
               <Link
                 href="/dashboard/agents/new"
                 className="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-500 transition-colors"
               >
-                + Nuevo agente
+                + New AI Employee
               </Link>
             )}
           </div>
@@ -202,10 +206,10 @@ export default async function DashboardPage() {
         {/* Next steps */}
         <div className="mt-4 grid gap-2 sm:grid-cols-4">
           {[
-            { step: "1", label: "Crear agente", done: (agentsResult?.limitCheck.current ?? 0) > 0, href: "/dashboard/agents/new" },
-            { step: "2", label: "Configurar negocio", done: false, href: "/dashboard/agents" },
-            { step: "3", label: "Probar en sandbox", done: false, href: "#" },
-            { step: "4", label: "Conectar WhatsApp", done: false, href: "#" },
+            { step: "1", label: "Create AI Employee", done: (agentsResult?.limitCheck.current ?? 0) > 0, href: "/dashboard/agents/new" },
+            { step: "2", label: "Configure your business", done: false, href: "/dashboard/agents" },
+            { step: "3", label: "Test your AI", done: false, href: "/dashboard/agents" },
+            { step: "4", label: "Connect WhatsApp", done: false, href: "/dashboard/whatsapp" },
           ].map(({ step, label, done, href }) => (
             <Link
               key={step}
@@ -217,11 +221,11 @@ export default async function DashboardPage() {
               }`}
             >
               <span className="block text-xs font-medium uppercase tracking-wider">
-                Paso {step}
+                Step {step}
               </span>
               <span className="mt-1 block text-sm">{label}</span>
               {done && (
-                <span className="mt-1 block text-xs text-green-500">✓ Completado</span>
+                <span className="mt-1 block text-xs text-green-500">✓ Done</span>
               )}
             </Link>
           ))}
