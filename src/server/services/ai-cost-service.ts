@@ -14,6 +14,8 @@ interface CostEstimate {
 }
 
 const PRICING_TABLE: Record<string, ModelPricing> = {
+  // Claude Fable 5 — $10.00/MTok input, $50.00/MTok output (most capable tier)
+  "claude-fable-5":     { inputCentsPerToken: 0.001, outputCentsPerToken: 0.005 },
   // Claude Haiku — $0.80/MTok input, $4.00/MTok output
   "claude-haiku-4-5-20251001": { inputCentsPerToken: 0.00008, outputCentsPerToken: 0.0004 },
   "claude-haiku-4-5":          { inputCentsPerToken: 0.00008, outputCentsPerToken: 0.0004 },

@@ -126,8 +126,12 @@ APP_URL=https://your-domain.vercel.app \
 | AI routes may timeout on Vercel Hobby (10s limit) | Sandbox/RAG fail on free plan | Use Vercel Pro; add `maxDuration = 60` to AI routes |
 | `waai_ai_cost_snapshots` has no cron populating it | Cost analytics empty | Fase 10 work |
 | `assertCanAddMember` not implemented | Member limit not enforced | Spec says "si aplica"; acceptable |
-| Stripe checkout not activated | Billing is readiness-only | Intentional — Fase 10 scope |
-| Meta Cloud API not wired | Meta WhatsApp not available | Intentional — Fase 10 scope |
+
+> **Update (post-0.9.0):** Stripe checkout + subscription-lifecycle webhooks and the
+> Meta Cloud API WhatsApp provider are now implemented and merged (previously
+> deferred to Fase 10). Activate Stripe by setting `STRIPE_*` env vars; select the
+> Meta provider via `WHATSAPP_PROVIDER=meta`. Default LLM model is now
+> `claude-fable-5` (see `.env.example` for the retention/cost caveats).
 
 ---
 

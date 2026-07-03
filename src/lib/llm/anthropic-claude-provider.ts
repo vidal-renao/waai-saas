@@ -3,7 +3,7 @@ import type { LLMProvider, LLMInput, LLMOutput } from "./types";
 
 // Fallback model — used if ANTHROPIC_MODEL env var is not set.
 // See docs/architecture/17-llm-provider-runtime.md
-const DEFAULT_MODEL = "claude-haiku-4-5-20251001";
+const DEFAULT_MODEL = "claude-fable-5";
 const DEFAULT_MAX_TOKENS = 1024;
 const TIMEOUT_MS = 30_000;
 
@@ -66,6 +66,19 @@ export class AnthropicClaudeProvider implements LLMProvider {
         content: m.content,
       })),
     });
+
+    // Fable 5 safety classifiers can decline a request (HTTP 200 with
+    // stop_reason "refusal" and empty/partial content). Surface it as an error
+    // so the runtime records the failed run and returns its user-facing
+    // fallback, instead of sending a blank reply on WhatsApp.
+    if (response.stop_reason === "refusal") {
+      const category =
+        (response.stop_details as { category?: string } | null)?.category ??
+        "unspecified";
+      throw new Error(
+        `AnthropicClaudeProvider: request declined by safety classifier (${category})`
+      );
+    }
 
     const content = response.content
       .filter((b): b is Anthropic.TextBlock => b.type === "text")
