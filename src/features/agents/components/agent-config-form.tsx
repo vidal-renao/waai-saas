@@ -12,20 +12,20 @@ import type { WaaiAgentConfig } from "@/types/database";
 import { Button } from "@/components/ui/button";
 
 const TONES = [
-  { value: "professional", label: "Profesional" },
-  { value: "friendly", label: "Amigable" },
-  { value: "casual", label: "Casual" },
+  { value: "professional", label: "Professional" },
+  { value: "friendly", label: "Friendly" },
   { value: "formal", label: "Formal" },
-  { value: "empathetic", label: "Empático" },
+  { value: "casual", label: "Casual" },
+  { value: "empathetic", label: "Empathetic" },
 ];
 
 const GOALS = [
-  { value: "Capturar leads", label: "Capturar leads" },
-  { value: "Responder preguntas frecuentes", label: "Responder FAQs" },
-  { value: "Agendar citas", label: "Agendar citas" },
-  { value: "Derivar al equipo humano", label: "Derivar al equipo humano" },
-  { value: "Proporcionar información", label: "Proporcionar información" },
-  { value: "Tomar pedidos", label: "Tomar pedidos" },
+  { value: "Capture Leads", label: "Capture Leads" },
+  { value: "Answer FAQs", label: "Answer FAQs" },
+  { value: "Book Appointments", label: "Book Appointments" },
+  { value: "Transfer to Human Agent", label: "Transfer to Human Agent" },
+  { value: "Provide Information", label: "Provide Information" },
+  { value: "Take Orders", label: "Take Orders" },
 ];
 
 interface AgentConfigFormProps {
@@ -86,7 +86,7 @@ export function AgentConfigForm({ agentId, config }: AgentConfigFormProps) {
 
     const json = (await res.json()) as { error?: string };
     if (!res.ok) {
-      setServerError(json.error ?? "Error al guardar la configuración");
+      setServerError(json.error ?? "Failed to save configuration. Please try again.");
       return;
     }
 
@@ -140,25 +140,25 @@ export function AgentConfigForm({ agentId, config }: AgentConfigFormProps) {
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <section className="flex flex-col gap-4">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
-          Identidad del negocio
+          Business Identity
         </h2>
-        {field("business_name", "Nombre del negocio", { required: true })}
-        {field("industry", "Sector", { required: true })}
-        {textarea("business_description", "Descripción del negocio", {
-          placeholder: "Describe brevemente qué hace tu empresa...",
+        {field("business_name", "Business name", { required: true })}
+        {field("industry", "Industry", { required: true })}
+        {textarea("business_description", "Business description", {
+          placeholder: "Briefly describe what your business does and who your customers are...",
         })}
-        {field("country", "País (código ISO)", { placeholder: "ES" })}
-        {field("city", "Ciudad principal")}
-        {field("timezone", "Zona horaria", { placeholder: "Europe/Madrid" })}
+        {field("country", "Country (ISO code)", { placeholder: "CH" })}
+        {field("city", "City")}
+        {field("timezone", "Timezone", { placeholder: "Europe/Zurich" })}
       </section>
 
       <section className="flex flex-col gap-4">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
-          Comunicación
+          Communication
         </h2>
         <div className="flex flex-col gap-1">
           <label className="text-sm text-zinc-300">
-            Tono <span className="text-red-400">*</span>
+            Tone <span className="text-red-400">*</span>
           </label>
           <select
             className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white focus:border-green-500 focus:outline-none"
@@ -174,37 +174,37 @@ export function AgentConfigForm({ agentId, config }: AgentConfigFormProps) {
             <p className="text-xs text-red-400">{errors.tone.message}</p>
           )}
         </div>
-        {textarea("target_audience", "Público objetivo", {
-          placeholder: "Ej: Propietarios de viviendas y oficinas en Madrid",
+        {textarea("target_audience", "Target audience", {
+          placeholder: "e.g. Homeowners and office managers in the Zürich area",
         })}
-        {textarea("opening_message", "Mensaje de bienvenida", {
-          placeholder: "¡Hola! Soy el asistente de...",
+        {textarea("opening_message", "Welcome message", {
+          placeholder: "e.g. Hello! I'm your assistant at...",
         })}
       </section>
 
       <section className="flex flex-col gap-4">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
-          Servicios
+          Services
         </h2>
-        {textarea("services_raw", "Servicios (uno por línea)", {
-          placeholder: "Limpieza de hogar\nLimpieza de oficinas\n...",
+        {textarea("services_raw", "Services offered (one per line)", {
+          placeholder: "Home cleaning\nOffice cleaning\n...",
           rows: 4,
         })}
-        {textarea("service_areas_raw", "Zonas de servicio (una por línea)", {
-          placeholder: "Madrid\nPozuelo\n...",
+        {textarea("service_areas_raw", "Service areas (one per line)", {
+          placeholder: "Zürich\nWinterthur\n...",
         })}
-        {field("working_hours_raw", "Horario de atención", {
-          placeholder: "Lunes a Viernes 9:00-18:00",
+        {field("working_hours_raw", "Business hours", {
+          placeholder: "Monday–Friday 08:00–18:00",
         })}
       </section>
 
       <section className="flex flex-col gap-4">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
-          Objetivo y leads
+          Goal & Lead Capture
         </h2>
         <div className="flex flex-col gap-1">
           <label className="text-sm text-zinc-300">
-            Objetivo principal <span className="text-red-400">*</span>
+            Primary goal <span className="text-red-400">*</span>
           </label>
           <select
             className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white focus:border-green-500 focus:outline-none"
@@ -220,36 +220,36 @@ export function AgentConfigForm({ agentId, config }: AgentConfigFormProps) {
             <p className="text-xs text-red-400">{errors.primary_goal.message}</p>
           )}
         </div>
-        {textarea("lead_capture_fields_raw", "Datos a recopilar (uno por línea)", {
-          placeholder: "nombre\nteléfono\nemail",
+        {textarea("lead_capture_fields_raw", "Customer data to collect (one per line)", {
+          placeholder: "Name\nPhone number\nEmail address",
         })}
       </section>
 
       <section className="flex flex-col gap-4">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
-          Escalado humano
+          Human Escalation
         </h2>
-        {textarea("handoff_rules_raw", "Reglas de escalado (una por línea)", {
-          placeholder: "Si el cliente está enfadado\nSi pide hablar con una persona",
+        {textarea("handoff_rules_raw", "Escalate to human when (one rule per line)", {
+          placeholder: "Customer is upset or angry\nCustomer asks to speak with a person",
         })}
-        {textarea("human_handoff_message", "Mensaje antes de escalar", {
-          placeholder: "Te conecto con nuestro equipo ahora mismo...",
+        {textarea("human_handoff_message", "Message before escalating", {
+          placeholder: "I'm connecting you with one of our team members right now...",
         })}
       </section>
 
       <section className="flex flex-col gap-4">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
-          Conocimiento y restricciones
+          Knowledge & Restrictions
         </h2>
-        {textarea("faqs_raw", "Preguntas frecuentes (una por línea)", {
-          placeholder: "¿Cuánto cuesta una limpieza? / Depende del tamaño",
+        {textarea("faqs_raw", "Frequently asked questions (one per line)", {
+          placeholder: "What does a cleaning cost? / Prices vary by service size.",
           rows: 4,
         })}
-        {textarea("fallback_message", "Mensaje cuando no sepa responder", {
-          placeholder: "Lo siento, no tengo esa información...",
+        {textarea("fallback_message", "Fallback message (when AI doesn't know the answer)", {
+          placeholder: "I'm sorry, I don't have that information. Let me connect you with a team member.",
         })}
-        {textarea("restrictions_raw", "Restricciones (una por línea)", {
-          placeholder: "No prometer descuentos\nNo confirmar citas sin verificar disponibilidad",
+        {textarea("restrictions_raw", "Restrictions (one per line)", {
+          placeholder: "Do not promise discounts without manager approval\nDo not confirm appointments without checking availability",
         })}
       </section>
 
@@ -261,7 +261,7 @@ export function AgentConfigForm({ agentId, config }: AgentConfigFormProps) {
 
       <div className="flex gap-3">
         <Button type="submit" disabled={isSubmitting} className="flex-1">
-          {isSubmitting ? "Guardando..." : "Guardar configuración"}
+          {isSubmitting ? "Saving..." : "Save Configuration"}
         </Button>
       </div>
     </form>

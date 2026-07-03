@@ -21,64 +21,67 @@ import { buildSystemPrompt, parseList } from "@/lib/prompt-builder";
 import { AgentPromptPreview } from "./agent-prompt-preview";
 import { Button } from "@/components/ui/button";
 
-// ── Step labels ───────────────────────────────────────────────────────────────
 const STEPS = [
-  "Identidad",
-  "Comunicación",
-  "Servicios",
-  "Lead Capture",
-  "Vista previa",
+  "Identity",
+  "Communication",
+  "Services",
+  "Leads & Handoffs",
+  "Review",
 ];
 
 const INDUSTRIES = [
-  "Limpieza",
-  "Restaurante / Cafetería",
-  "Clínica / Salud",
-  "Inmobiliaria",
-  "Academia / Formación",
-  "Construcción / Reformas",
-  "Ecommerce",
-  "Consultoría / Coaching",
-  "Logística",
-  "Tecnología / IT",
-  "Belleza / Estética",
-  "Jardinería / Paisajismo",
-  "Otro",
+  "Cleaning Services",
+  "Restaurant / Café",
+  "Healthcare / Medical",
+  "Real Estate",
+  "Education & Training",
+  "Construction & Renovation",
+  "E-commerce",
+  "Consulting / Coaching",
+  "Logistics & Delivery",
+  "Technology & IT",
+  "Beauty & Wellness",
+  "Gardening & Landscaping",
+  "Financial Services",
+  "Legal Services",
+  "Hotel & Hospitality",
+  "Retail",
+  "Other",
 ];
 
 const LANGUAGES = [
-  { value: "es", label: "Español" },
-  { value: "en", label: "English" },
-  { value: "fr", label: "Français" },
   { value: "de", label: "Deutsch" },
+  { value: "fr", label: "Français" },
+  { value: "it", label: "Italiano" },
+  { value: "en", label: "English" },
+  { value: "es", label: "Español" },
   { value: "pt", label: "Português" },
   { value: "ca", label: "Català" },
-  { value: "it", label: "Italiano" },
 ];
 
 const TONES = [
-  { value: "professional", label: "Profesional" },
-  { value: "friendly", label: "Amigable" },
-  { value: "casual", label: "Casual" },
+  { value: "professional", label: "Professional" },
+  { value: "friendly", label: "Friendly" },
   { value: "formal", label: "Formal" },
-  { value: "empathetic", label: "Empático" },
+  { value: "casual", label: "Casual" },
+  { value: "empathetic", label: "Empathetic" },
 ];
 
 const GOALS = [
-  "Capturar leads",
-  "Responder preguntas frecuentes",
-  "Agendar citas",
-  "Derivar al equipo humano",
-  "Proporcionar información",
-  "Tomar pedidos",
+  "Capture Leads",
+  "Answer FAQs",
+  "Book Appointments",
+  "Transfer to Human Agent",
+  "Provide Information",
+  "Take Orders",
 ];
 
 // ── Progress indicator ────────────────────────────────────────────────────────
 function WizardProgress({ current, total }: { current: number; total: number }) {
   return (
-    <div className="flex items-center gap-1 mb-8">
+    <div className="mb-8 flex items-center gap-1">
       {Array.from({ length: total }).map((_, i) => (
-        <div key={i} className="flex items-center gap-1 flex-1">
+        <div key={i} className="flex flex-1 items-center gap-1">
           <div
             className={`h-1.5 w-full rounded-full transition-colors ${
               i < current ? "bg-green-500" : i === current ? "bg-green-700" : "bg-zinc-800"
@@ -86,7 +89,7 @@ function WizardProgress({ current, total }: { current: number; total: number }) 
           />
         </div>
       ))}
-      <span className="ml-2 text-xs text-zinc-500 whitespace-nowrap">
+      <span className="ml-2 whitespace-nowrap text-xs text-zinc-500">
         {current + 1}/{total}
       </span>
     </div>
@@ -109,41 +112,58 @@ function Step1({
   return (
     <form onSubmit={handleSubmit(onNext)} className="flex flex-col gap-5">
       <div>
-        <h2 className="text-lg font-semibold text-white">Identidad del negocio</h2>
-        <p className="text-sm text-zinc-400 mt-1">Cuéntanos sobre ti y tu empresa.</p>
+        <h2 className="text-lg font-semibold text-white">Your New AI Employee</h2>
+        <p className="mt-1 text-sm text-zinc-400">
+          Tell us about your business so your AI Employee knows who they work for.
+        </p>
       </div>
 
-      <Field label="Nombre del agente *" error={errors.name?.message}>
-        <input type="text" className={inputCls} placeholder="Ej. D'NAMAR Assistant" {...register("name")} />
+      <Field label="AI Employee name" error={errors.name?.message} required>
+        <input
+          type="text"
+          className={inputCls}
+          placeholder="e.g. Lena, Max, Assistant"
+          {...register("name")}
+        />
       </Field>
 
-      <Field label="Nombre del negocio *" error={errors.business_name?.message}>
-        <input type="text" className={inputCls} placeholder="Ej. D'NAMAR Limpiezas" {...register("business_name")} />
+      <Field label="Business name" error={errors.business_name?.message} required>
+        <input
+          type="text"
+          className={inputCls}
+          placeholder="e.g. Müller GmbH"
+          {...register("business_name")}
+        />
       </Field>
 
-      <Field label="Sector *" error={errors.industry?.message}>
+      <Field label="Industry" error={errors.industry?.message} required>
         <select className={inputCls} {...register("industry")}>
-          <option value="">Selecciona el sector</option>
+          <option value="">Select your industry</option>
           {INDUSTRIES.map((i) => (
             <option key={i} value={i}>{i}</option>
           ))}
         </select>
       </Field>
 
-      <Field label="Descripción breve" error={errors.business_description?.message}>
-        <textarea rows={3} className={inputCls} placeholder="Describe brevemente qué hace tu empresa..." {...register("business_description")} />
+      <Field label="Business description" error={errors.business_description?.message}>
+        <textarea
+          rows={3}
+          className={inputCls}
+          placeholder="Briefly describe what your business does and who your customers are..."
+          {...register("business_description")}
+        />
       </Field>
 
       <div className="grid grid-cols-2 gap-4">
-        <Field label="País (ej. ES, CH)" error={errors.country?.message}>
-          <input type="text" maxLength={2} className={inputCls} placeholder="ES" {...register("country")} />
+        <Field label="Country (e.g. CH, DE, AT)" error={errors.country?.message}>
+          <input type="text" maxLength={2} className={inputCls} placeholder="CH" {...register("country")} />
         </Field>
-        <Field label="Ciudad principal" error={errors.city?.message}>
-          <input type="text" className={inputCls} placeholder="Madrid" {...register("city")} />
+        <Field label="City" error={errors.city?.message}>
+          <input type="text" className={inputCls} placeholder="Zürich" {...register("city")} />
         </Field>
       </div>
 
-      <Button type="submit" className="mt-2 w-full">Siguiente →</Button>
+      <Button type="submit" className="mt-2 w-full">Next →</Button>
     </form>
   );
 }
@@ -160,17 +180,19 @@ function Step2({
 }) {
   const { register, handleSubmit, formState: { errors } } = useForm<AgentStep2>({
     resolver: zodResolver(agentStep2Schema),
-    defaultValues: { primary_language: "es", tone: "professional", ...defaultValues },
+    defaultValues: { primary_language: "de", tone: "professional", ...defaultValues },
   });
 
   return (
     <form onSubmit={handleSubmit(onNext)} className="flex flex-col gap-5">
       <div>
-        <h2 className="text-lg font-semibold text-white">Estilo de comunicación</h2>
-        <p className="text-sm text-zinc-400 mt-1">¿Cómo debe hablar tu agente?</p>
+        <h2 className="text-lg font-semibold text-white">How They Communicate</h2>
+        <p className="mt-1 text-sm text-zinc-400">
+          Define the language and tone your AI Employee uses with customers.
+        </p>
       </div>
 
-      <Field label="Idioma principal *" error={errors.primary_language?.message}>
+      <Field label="Primary language" error={errors.primary_language?.message} required>
         <select className={inputCls} {...register("primary_language")}>
           {LANGUAGES.map((l) => (
             <option key={l.value} value={l.value}>{l.label}</option>
@@ -178,7 +200,7 @@ function Step2({
         </select>
       </Field>
 
-      <Field label="Tono de comunicación *" error={errors.tone?.message}>
+      <Field label="Communication tone" error={errors.tone?.message} required>
         <select className={inputCls} {...register("tone")}>
           {TONES.map((t) => (
             <option key={t.value} value={t.value}>{t.label}</option>
@@ -186,17 +208,27 @@ function Step2({
         </select>
       </Field>
 
-      <Field label="Público objetivo" error={errors.target_audience?.message}>
-        <textarea rows={2} className={inputCls} placeholder="Ej. Propietarios de viviendas y oficinas en Madrid..." {...register("target_audience")} />
+      <Field label="Target audience" error={errors.target_audience?.message}>
+        <textarea
+          rows={2}
+          className={inputCls}
+          placeholder="e.g. Homeowners and office managers in the Zürich area..."
+          {...register("target_audience")}
+        />
       </Field>
 
-      <Field label="Mensaje de bienvenida" error={errors.opening_message?.message}>
-        <textarea rows={2} className={inputCls} placeholder="¡Hola! Soy el asistente de..." {...register("opening_message")} />
+      <Field label="Welcome message" error={errors.opening_message?.message}>
+        <textarea
+          rows={2}
+          className={inputCls}
+          placeholder="e.g. Hello! I'm Lena, your assistant at Müller GmbH. How can I help you today?"
+          {...register("opening_message")}
+        />
       </Field>
 
       <div className="flex gap-3 mt-2">
-        <button type="button" onClick={onBack} className={backBtnCls}>← Anterior</button>
-        <Button type="submit" className="flex-1">Siguiente →</Button>
+        <button type="button" onClick={onBack} className={backBtnCls}>← Back</button>
+        <Button type="submit" className="flex-1">Next →</Button>
       </div>
     </form>
   );
@@ -220,25 +252,42 @@ function Step3({
   return (
     <form onSubmit={handleSubmit(onNext)} className="flex flex-col gap-5">
       <div>
-        <h2 className="text-lg font-semibold text-white">Servicios y disponibilidad</h2>
-        <p className="text-sm text-zinc-400 mt-1">¿Qué ofreces y cuándo?</p>
+        <h2 className="text-lg font-semibold text-white">What They Do</h2>
+        <p className="mt-1 text-sm text-zinc-400">
+          Tell your AI Employee what services you offer and when your business is available.
+        </p>
       </div>
 
-      <Field label="Servicios * (uno por línea)" error={errors.services_raw?.message}>
-        <textarea rows={4} className={inputCls} placeholder={"Limpieza de hogar\nLimpieza de oficinas\nDesinfección"} {...register("services_raw")} />
+      <Field label="Services offered (one per line)" error={errors.services_raw?.message} required>
+        <textarea
+          rows={4}
+          className={inputCls}
+          placeholder={"Home cleaning\nOffice cleaning\nDeep cleaning & disinfection"}
+          {...register("services_raw")}
+        />
       </Field>
 
-      <Field label="Zonas de servicio (una por línea)" error={errors.service_areas_raw?.message}>
-        <textarea rows={3} className={inputCls} placeholder={"Madrid\nPozuelo\nMajadahonda"} {...register("service_areas_raw")} />
+      <Field label="Service areas (one per line)" error={errors.service_areas_raw?.message}>
+        <textarea
+          rows={3}
+          className={inputCls}
+          placeholder={"Zürich\nWinterthur\nBaden"}
+          {...register("service_areas_raw")}
+        />
       </Field>
 
-      <Field label="Horario de atención" error={errors.working_hours_raw?.message}>
-        <input type="text" className={inputCls} placeholder="Lunes a Viernes 9:00-18:00, Sábado 10:00-14:00" {...register("working_hours_raw")} />
+      <Field label="Business hours" error={errors.working_hours_raw?.message}>
+        <input
+          type="text"
+          className={inputCls}
+          placeholder="Monday–Friday 08:00–18:00, Saturday 09:00–13:00"
+          {...register("working_hours_raw")}
+        />
       </Field>
 
       <div className="flex gap-3 mt-2">
-        <button type="button" onClick={onBack} className={backBtnCls}>← Anterior</button>
-        <Button type="submit" className="flex-1">Siguiente →</Button>
+        <button type="button" onClick={onBack} className={backBtnCls}>← Back</button>
+        <Button type="submit" className="flex-1">Next →</Button>
       </div>
     </form>
   );
@@ -262,34 +311,51 @@ function Step4({
   return (
     <form onSubmit={handleSubmit(onNext)} className="flex flex-col gap-5">
       <div>
-        <h2 className="text-lg font-semibold text-white">Lead capture y escalado</h2>
-        <p className="text-sm text-zinc-400 mt-1">¿Qué debe conseguir y cuándo escalar?</p>
+        <h2 className="text-lg font-semibold text-white">Goals & Escalation</h2>
+        <p className="mt-1 text-sm text-zinc-400">
+          Define what your AI Employee should achieve and when to involve a human agent.
+        </p>
       </div>
 
-      <Field label="Objetivo principal *" error={errors.primary_goal?.message}>
+      <Field label="Primary goal" error={errors.primary_goal?.message} required>
         <select className={inputCls} {...register("primary_goal")}>
-          <option value="">Selecciona el objetivo</option>
+          <option value="">Select the main goal</option>
           {GOALS.map((g) => (
             <option key={g} value={g}>{g}</option>
           ))}
         </select>
       </Field>
 
-      <Field label="Datos a recopilar (uno por línea)" error={errors.lead_capture_fields_raw?.message}>
-        <textarea rows={3} className={inputCls} placeholder={"nombre\nteléfono\nemail"} {...register("lead_capture_fields_raw")} />
+      <Field label="Customer data to collect (one per line)" error={errors.lead_capture_fields_raw?.message}>
+        <textarea
+          rows={3}
+          className={inputCls}
+          placeholder={"Name\nPhone number\nEmail address"}
+          {...register("lead_capture_fields_raw")}
+        />
       </Field>
 
-      <Field label="Reglas de escalado a humano (una por línea)" error={errors.handoff_rules_raw?.message}>
-        <textarea rows={3} className={inputCls} placeholder={"Si el cliente está enfadado\nSi pide hablar con una persona"} {...register("handoff_rules_raw")} />
+      <Field label="Escalate to human when (one rule per line)" error={errors.handoff_rules_raw?.message}>
+        <textarea
+          rows={3}
+          className={inputCls}
+          placeholder={"Customer is upset or angry\nCustomer asks to speak with a person\nComplaint about a previous service"}
+          {...register("handoff_rules_raw")}
+        />
       </Field>
 
-      <Field label="Mensaje antes de escalar" error={errors.human_handoff_message?.message}>
-        <textarea rows={2} className={inputCls} placeholder="Te conecto con nuestro equipo ahora mismo..." {...register("human_handoff_message")} />
+      <Field label="Message before escalating to human" error={errors.human_handoff_message?.message}>
+        <textarea
+          rows={2}
+          className={inputCls}
+          placeholder="I'm connecting you with one of our team members right now..."
+          {...register("human_handoff_message")}
+        />
       </Field>
 
       <div className="flex gap-3 mt-2">
-        <button type="button" onClick={onBack} className={backBtnCls}>← Anterior</button>
-        <Button type="submit" className="flex-1">Siguiente →</Button>
+        <button type="button" onClick={onBack} className={backBtnCls}>← Back</button>
+        <Button type="submit" className="flex-1">Next →</Button>
       </div>
     </form>
   );
@@ -319,10 +385,10 @@ function Step5({
     const vals = getValues();
     const all = { ...accumulated, ...vals };
     const prompt = buildSystemPrompt({
-      agentName: all.name ?? "Agente",
-      businessName: all.business_name ?? "Mi empresa",
+      agentName: all.name ?? "AI Employee",
+      businessName: all.business_name ?? "My Business",
       industry: all.industry ?? "",
-      primaryLanguage: all.primary_language ?? "es",
+      primaryLanguage: all.primary_language ?? "en",
       tone: all.tone ?? "professional",
       primaryGoal: all.primary_goal ?? "",
       targetAudience: all.target_audience,
@@ -333,7 +399,7 @@ function Step5({
       faqs: parseList(vals.faqs_raw),
       leadCaptureFields: parseList(all.lead_capture_fields_raw),
       handoffRules: parseList(all.handoff_rules_raw),
-      fallbackMessage: vals.fallback_message || "Lo siento, no tengo esa información.",
+      fallbackMessage: vals.fallback_message || "I'm sorry, I don't have that information. Let me connect you with a team member.",
       humanHandoffMessage: all.human_handoff_message,
       restrictions: parseList(vals.restrictions_raw),
       openingMessage: all.opening_message,
@@ -344,43 +410,60 @@ function Step5({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
       <div>
-        <h2 className="text-lg font-semibold text-white">Seguridad y vista previa</h2>
-        <p className="text-sm text-zinc-400 mt-1">Últimos detalles y revisa el prompt generado.</p>
+        <h2 className="text-lg font-semibold text-white">Final Review</h2>
+        <p className="mt-1 text-sm text-zinc-400">
+          Add FAQs, a fallback message, and any restrictions. Then preview the AI Instructions.
+        </p>
       </div>
 
-      <Field label="Preguntas frecuentes (una por línea)" error={errors.faqs_raw?.message}>
-        <textarea rows={4} className={inputCls} placeholder={"¿Cuánto cuesta una limpieza? / Depende del servicio\n¿Traéis el material? / Sí, incluido"} {...register("faqs_raw")} />
+      <Field label="Frequently asked questions (one per line)" error={errors.faqs_raw?.message}>
+        <textarea
+          rows={4}
+          className={inputCls}
+          placeholder={"What does a cleaning cost? / Prices vary by service size.\nDo you bring your own supplies? / Yes, all supplies are included."}
+          {...register("faqs_raw")}
+        />
       </Field>
 
-      <Field label="Mensaje cuando no sepa responder *" error={errors.fallback_message?.message}>
-        <textarea rows={2} className={inputCls} placeholder="Lo siento, no tengo esa información. Te pongo en contacto con nuestro equipo." {...register("fallback_message")} />
+      <Field label="Fallback message (when the AI doesn't know the answer)" error={errors.fallback_message?.message} required>
+        <textarea
+          rows={2}
+          className={inputCls}
+          placeholder="I'm sorry, I don't have that information. Let me connect you with a team member."
+          {...register("fallback_message")}
+        />
       </Field>
 
-      <Field label="Restricciones (una por línea)" error={errors.restrictions_raw?.message}>
-        <textarea rows={3} className={inputCls} placeholder={"No prometer descuentos\nNo confirmar citas sin verificar disponibilidad"} {...register("restrictions_raw")} />
+      <Field label="Restrictions (one per line)" error={errors.restrictions_raw?.message}>
+        <textarea
+          rows={3}
+          className={inputCls}
+          placeholder={"Do not promise discounts without manager approval\nDo not confirm appointments without checking availability"}
+          {...register("restrictions_raw")}
+        />
       </Field>
 
       <button
         type="button"
         onClick={generatePreview}
-        className="rounded-lg border border-zinc-600 bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors"
+        className="rounded-lg border border-zinc-600 bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-300 transition-colors hover:bg-zinc-700 hover:text-white"
       >
-        Vista previa del prompt
+        Preview AI Instructions
       </button>
 
       {preview && (
         <div className="flex flex-col gap-2">
-          <p className="text-xs text-zinc-500">Vista previa del system prompt (generado localmente):</p>
+          <p className="text-xs text-zinc-500">Preview of the AI Instructions (generated locally):</p>
           <AgentPromptPreview prompt={preview} />
         </div>
       )}
 
       <div className="flex gap-3 mt-2">
         <button type="button" onClick={onBack} className={backBtnCls} disabled={isSubmitting}>
-          ← Anterior
+          ← Back
         </button>
         <Button type="submit" disabled={isSubmitting} className="flex-1">
-          {isSubmitting ? "Creando agente..." : "Crear agente"}
+          {isSubmitting ? "Creating AI Employee..." : "Create AI Employee"}
         </Button>
       </div>
     </form>
@@ -391,15 +474,19 @@ function Step5({
 function Field({
   label,
   error,
+  required,
   children,
 }: {
   label: string;
   error?: string;
+  required?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm text-zinc-300">{label}</label>
+      <label className="text-sm text-zinc-300">
+        {label} {required && <span className="text-red-400">*</span>}
+      </label>
       {children}
       {error && <p className="text-xs text-red-400">{error}</p>}
     </div>
@@ -446,8 +533,8 @@ export function AgentWizard() {
       if (!res.ok) {
         setSubmitError(
           res.status === 402
-            ? "Has alcanzado el límite de agentes de tu plan. Actualiza tu plan para crear más."
-            : json.error ?? "Error al crear el agente"
+            ? "You've reached your plan's AI Employee limit. Upgrade your plan to add more."
+            : json.error ?? "Failed to create AI Employee. Please try again."
         );
         return;
       }
@@ -457,7 +544,7 @@ export function AgentWizard() {
         router.refresh();
       }
     } catch {
-      setSubmitError("Error de conexión. Inténtalo de nuevo.");
+      setSubmitError("Connection error. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

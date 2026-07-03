@@ -30,13 +30,13 @@ export function AgentCard({ agent }: AgentCardProps) {
           href={`/dashboard/agents/${agent.id}`}
           className="flex-1 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-center text-xs font-medium text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors"
         >
-          Ver agente
+          View
         </Link>
         <Link
           href={`/dashboard/agents/${agent.id}/edit`}
           className="flex-1 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-center text-xs font-medium text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors"
         >
-          Editar
+          Edit
         </Link>
       </div>
     </div>

@@ -37,9 +37,9 @@ export default async function AgentPromptPage({
           >
             ← {agent.name}
           </Link>
-          <h1 className="mt-2 text-2xl font-bold text-white">System Prompts</h1>
+          <h1 className="mt-2 text-2xl font-bold text-white">AI Instructions</h1>
           <p className="mt-1 text-sm text-zinc-400">
-            Historial de versiones del system prompt generado.
+            Version history of the AI Instructions generated for this employee.
           </p>
         </div>
 
@@ -50,10 +50,10 @@ export default async function AgentPromptPage({
 
       {promptVersions.length === 0 ? (
         <div className="rounded-xl border border-dashed border-zinc-700 bg-zinc-900/50 p-8 text-center">
-          <p className="text-zinc-400">No hay prompts generados todavía.</p>
+          <p className="text-zinc-400">No AI Instructions generated yet.</p>
           {canGenerate && (
             <p className="mt-2 text-sm text-zinc-500">
-              Haz clic en &quot;Regenerar prompt&quot; para generar el primer prompt.
+              Click &quot;Generate AI Instructions&quot; to create the first version.
             </p>
           )}
         </div>
@@ -70,8 +70,8 @@ export default async function AgentPromptPage({
                 isActive={pv.is_active}
               />
               <p className="mt-2 text-xs text-zinc-600">
-                Generado:{" "}
-                {new Date(pv.created_at).toLocaleString("es-ES", {
+                Generated:{" "}
+                {new Date(pv.created_at).toLocaleString("de-CH", {
                   day: "2-digit",
                   month: "short",
                   year: "numeric",

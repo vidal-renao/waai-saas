@@ -41,9 +41,9 @@ export default async function AgentEditPage({
         >
           ← {agent.name}
         </Link>
-        <h1 className="mt-2 text-2xl font-bold text-white">Editar configuración</h1>
+        <h1 className="mt-2 text-2xl font-bold text-white">Edit Configuration</h1>
         <p className="mt-1 text-sm text-zinc-400">
-          Actualiza la configuración del agente. El prompt se puede regenerar después.
+          Update your AI Employee&apos;s settings. You can regenerate their AI Instructions afterwards.
         </p>
       </div>
 

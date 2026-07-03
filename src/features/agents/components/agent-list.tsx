@@ -19,9 +19,9 @@ export function AgentList({ agents, limitCheck }: AgentListProps) {
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Agentes de WhatsApp</h1>
+          <h1 className="text-2xl font-bold text-white">AI Employees</h1>
           <p className="mt-1 text-sm text-zinc-400">
-            Crea y gestiona los agentes inteligentes de tu empresa.
+            Hire and manage the AI Employees that handle your customer conversations.
           </p>
         </div>
         {canCreate ? (
@@ -29,14 +29,14 @@ export function AgentList({ agents, limitCheck }: AgentListProps) {
             href="/dashboard/agents/new"
             className="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-500 transition-colors whitespace-nowrap"
           >
-            + Nuevo agente
+            + Hire AI Employee
           </Link>
         ) : (
           <button
             disabled
             className="rounded-lg bg-zinc-800 px-4 py-2 text-sm font-semibold text-zinc-500 cursor-not-allowed whitespace-nowrap"
           >
-            + Nuevo agente
+            + Hire AI Employee
           </button>
         )}
       </div>
@@ -59,13 +59,16 @@ export function AgentList({ agents, limitCheck }: AgentListProps) {
         </div>
       ) : (
         <div className="rounded-xl border border-dashed border-zinc-700 bg-zinc-900/50 p-10 text-center">
-          <p className="text-zinc-400">Aún no tienes agentes activos.</p>
+          <p className="text-zinc-400">No AI Employees yet.</p>
+          <p className="mt-1 text-sm text-zinc-500">
+            Hire your first AI Employee to start automating customer conversations.
+          </p>
           {canCreate && (
             <Link
               href="/dashboard/agents/new"
-              className="mt-3 inline-block rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-500 transition-colors"
+              className="mt-4 inline-block rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-500 transition-colors"
             >
-              Crear tu primer agente
+              Hire Your First AI Employee
             </Link>
           )}
         </div>
@@ -75,7 +78,7 @@ export function AgentList({ agents, limitCheck }: AgentListProps) {
       {archivedAgents.length > 0 && (
         <div>
           <p className="mb-3 text-xs font-medium uppercase tracking-wider text-zinc-600">
-            Archivados ({archivedAgents.length})
+            Archived ({archivedAgents.length})
           </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 opacity-50">
             {archivedAgents.map((agent) => (

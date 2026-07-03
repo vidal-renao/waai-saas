@@ -26,7 +26,7 @@ export default async function NewAgentPage() {
     return (
       <div className="mx-auto max-w-2xl">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-white">Nuevo agente</h1>
+          <h1 className="text-2xl font-bold text-white">Hire New AI Employee</h1>
         </div>
         <AgentLimitWarning
           current={limitCheck.current}
@@ -40,9 +40,9 @@ export default async function NewAgentPage() {
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white">Nuevo agente de WhatsApp</h1>
+        <h1 className="text-2xl font-bold text-white">Hire New AI Employee</h1>
         <p className="mt-1 text-sm text-zinc-400">
-          Configura tu agente respondiendo las preguntas del wizard.
+          Answer a few questions and we&apos;ll set up your new AI Employee in minutes.
         </p>
       </div>
       <AgentWizard />
