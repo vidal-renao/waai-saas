@@ -25,7 +25,7 @@ export function MessageList({ messages, loading }: MessageListProps) {
     return (
       <div className="flex flex-1 items-center justify-center">
         <p className="text-sm text-zinc-500">
-          Escribe un mensaje para iniciar la conversación de prueba.
+          Type a message to start your test conversation.
         </p>
       </div>
     );
@@ -51,7 +51,7 @@ export function MessageList({ messages, loading }: MessageListProps) {
                 msg.role === "user" ? "text-green-200" : "text-zinc-500"
               }`}
             >
-              {new Date(msg.created_at).toLocaleTimeString("es-ES", {
+              {new Date(msg.created_at).toLocaleTimeString("de-CH", {
                 hour: "2-digit",
                 minute: "2-digit",
               })}

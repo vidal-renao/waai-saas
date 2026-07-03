@@ -41,7 +41,7 @@ export function AgentKnowledgeSelector({
       });
       if (!res.ok) {
         const data = await res.json();
-        setErrorId(data.error ?? "Error al cambiar vínculo.");
+        setErrorId(data.error ?? "Failed to update link. Please try again.");
       } else {
         setLinkedIds((prev) => {
           const next = new Set(prev);
@@ -51,7 +51,7 @@ export function AgentKnowledgeSelector({
         });
       }
     } catch {
-      setErrorId("Error de conexión.");
+      setErrorId("Connection error. Please try again.");
     } finally {
       setLoadingId(null);
     }
@@ -61,14 +61,14 @@ export function AgentKnowledgeSelector({
     return (
       <div className="rounded-xl border border-dashed border-zinc-700 bg-zinc-900/50 p-6 text-center">
         <p className="text-sm text-zinc-400">
-          No hay documentos listos para vincular.
+          No indexed documents available to link.
         </p>
         <p className="mt-1 text-xs text-zinc-500">
-          Crea y procesa documentos en{" "}
-          <Link href="/dashboard/knowledge" className="text-green-400 hover:text-green-300 underline">
-            Knowledge Base
+          Add and index documents in{" "}
+          <Link href="/dashboard/knowledge" className="text-green-400 underline hover:text-green-300">
+            Company Knowledge
           </Link>{" "}
-          primero.
+          first.
         </p>
       </div>
     );
@@ -114,7 +114,7 @@ export function AgentKnowledgeSelector({
                       : "border-green-800 bg-green-950/20 text-green-400 hover:bg-green-900/30"
                   }`}
                 >
-                  {isLoading ? "…" : isLinked ? "Desvincular" : "Vincular"}
+                  {isLoading ? "…" : isLinked ? "Unlink" : "Link"}
                 </button>
               )}
             </div>

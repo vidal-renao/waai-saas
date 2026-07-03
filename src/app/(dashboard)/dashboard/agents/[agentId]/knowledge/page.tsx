@@ -34,22 +34,22 @@ export default async function AgentKnowledgePage({
         >
           ← {agent.name}
         </Link>
-        <h1 className="mt-2 text-2xl font-bold text-white">Knowledge Base del agente</h1>
+        <h1 className="mt-2 text-2xl font-bold text-white">Company Knowledge</h1>
         <p className="mt-1 text-sm text-zinc-400">
-          Vincula documentos listos para que el agente los use al responder en sandbox.
+          Link indexed documents so your AI Employee can use them when answering customers.
           {linkedCount > 0 && (
-            <span className="ml-2 text-green-400">{linkedCount} vinculado{linkedCount !== 1 ? "s" : ""}</span>
+            <span className="ml-2 text-green-400">{linkedCount} document{linkedCount !== 1 ? "s" : ""} linked</span>
           )}
         </p>
       </div>
 
       {workspaceDocuments.filter((d) => d.status === "ready").length === 0 && (
         <div className="mb-4 rounded-xl border border-yellow-800 bg-yellow-950/20 p-4 text-sm text-yellow-400">
-          No hay documentos procesados en el workspace.{" "}
+          No indexed documents available.{" "}
           <Link href="/dashboard/knowledge/new" className="underline hover:text-yellow-300">
-            Crear y procesar un documento
+            Add and index a document
           </Link>{" "}
-          antes de vincular.
+          first, then link it here.
         </div>
       )}
 

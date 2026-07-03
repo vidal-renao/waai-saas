@@ -19,20 +19,20 @@ export default async function KnowledgePage() {
         <div>
           <h1 className="text-2xl font-bold text-white">Knowledge Base</h1>
           <p className="mt-1 text-sm text-zinc-400">
-            Documentos de conocimiento del negocio vinculados a tus agentes.
+            Business knowledge that your AI Employees use to answer customer questions accurately.
           </p>
         </div>
         <Link
           href="/dashboard/knowledge/new"
           className="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-500"
         >
-          + Nuevo documento
+          + Add Document
         </Link>
       </div>
 
       {result.workspaceId && (
         <p className="mb-4 text-xs text-zinc-600">
-          {result.documentCount ?? 0} documento{result.documentCount !== 1 ? "s" : ""} activos
+          {result.documentCount ?? 0} active document{result.documentCount !== 1 ? "s" : ""}
         </p>
       )}
 

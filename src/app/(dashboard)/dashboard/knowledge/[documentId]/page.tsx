@@ -45,7 +45,7 @@ export default async function KnowledgeDocumentPage({
             href="/dashboard/knowledge"
             className="text-sm text-zinc-500 hover:text-zinc-300"
           >
-            ← Knowledge Base
+            ← Company Knowledge
           </Link>
           <div className="mt-2 flex items-center gap-3">
             <h1 className="text-2xl font-bold text-white">{doc.title}</h1>
@@ -55,9 +55,9 @@ export default async function KnowledgeDocumentPage({
             <p className="mt-1 text-sm text-zinc-400">{doc.description}</p>
           )}
           <p className="mt-1 text-xs text-zinc-500">
-            Tipo: {doc.source_type.toUpperCase()} · Creado:{" "}
-            {new Date(doc.created_at).toLocaleDateString("es-ES")}
-            {chunkCount > 0 && ` · ${chunkCount} chunks`}
+            Type: {doc.source_type.toUpperCase()} · Added:{" "}
+            {new Date(doc.created_at).toLocaleDateString("de-CH")}
+            {chunkCount > 0 && ` · ${chunkCount} knowledge chunks`}
           </p>
         </div>
       </div>
@@ -65,7 +65,7 @@ export default async function KnowledgeDocumentPage({
       {/* Processing */}
       {canProcess && (
         <div className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900 p-5">
-          <p className="mb-3 text-xs uppercase tracking-wider text-zinc-500">Procesamiento</p>
+          <p className="mb-3 text-xs uppercase tracking-wider text-zinc-500">Indexing</p>
           <KnowledgeProcessingPanel
             documentId={doc.id}
             status={doc.status}
@@ -79,11 +79,11 @@ export default async function KnowledgeDocumentPage({
       {doc.text_content && (
         <div className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900 p-5">
           <p className="mb-3 text-xs uppercase tracking-wider text-zinc-500">
-            Contenido ({doc.text_content.length.toLocaleString()} chars)
+            Content ({doc.text_content.length.toLocaleString()} characters)
           </p>
-          <pre className="max-h-64 overflow-y-auto whitespace-pre-wrap break-words text-xs text-zinc-300 leading-relaxed">
+          <pre className="max-h-64 overflow-y-auto whitespace-pre-wrap break-words text-xs leading-relaxed text-zinc-300">
             {doc.text_content.slice(0, 3000)}
-            {doc.text_content.length > 3000 && "\n…(truncado para vista previa)"}
+            {doc.text_content.length > 3000 && "\n…(truncated for preview)"}
           </pre>
         </div>
       )}
@@ -91,16 +91,16 @@ export default async function KnowledgeDocumentPage({
       {/* Danger zone */}
       {canArchive && doc.status !== "archived" && (
         <div className="rounded-xl border border-red-900/40 bg-zinc-900 p-5">
-          <p className="text-sm font-medium text-red-400">Zona de peligro</p>
+          <p className="text-sm font-medium text-red-400">Danger Zone</p>
           <p className="mt-1 text-xs text-zinc-500">
-            Archivar elimina el documento del conteo activo y lo desvincula de los agentes.
+            Archiving removes this document from active knowledge and unlinks it from all AI Employees.
           </p>
           <form action={`/api/knowledge/documents/${doc.id}/archive`} method="POST" className="mt-3">
             <button
               type="submit"
               className="rounded-lg border border-red-800 bg-red-900/20 px-3 py-2 text-sm font-medium text-red-400 hover:bg-red-900/40"
             >
-              Archivar documento
+              Archive Document
             </button>
           </form>
         </div>

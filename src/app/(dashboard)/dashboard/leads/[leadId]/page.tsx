@@ -55,7 +55,7 @@ export default async function LeadDetailPage({
             href={`/dashboard/conversations/${lead.conversation_id}`}
             className="mt-1 text-xs text-zinc-500 hover:text-zinc-300"
           >
-            Ver conversación →
+            View conversation →
           </Link>
         )}
       </div>
@@ -69,7 +69,7 @@ export default async function LeadDetailPage({
 
         {/* Internal notes for lead */}
         <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
-          <h3 className="mb-3 text-sm font-semibold text-zinc-300">Notas internas</h3>
+          <h3 className="mb-3 text-sm font-semibold text-zinc-300">Internal Notes</h3>
           <InternalNotesPanel
             conversationId={lead.conversation_id ?? ""}
             notes={notes}
@@ -79,7 +79,7 @@ export default async function LeadDetailPage({
         {/* Lead events */}
         {events.length > 0 && (
           <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
-            <h3 className="mb-3 text-sm font-semibold text-zinc-300">Historial</h3>
+            <h3 className="mb-3 text-sm font-semibold text-zinc-300">Activity History</h3>
             <div className="flex flex-col gap-2">
               {events.map((ev) => (
                 <div key={ev.id} className="flex items-start gap-3">
@@ -87,7 +87,7 @@ export default async function LeadDetailPage({
                   <div>
                     <p className="text-xs text-zinc-400">{ev.event_type.replace(/_/g, " ")}</p>
                     <p className="text-xs text-zinc-600">
-                      {new Date(ev.created_at).toLocaleString("es-ES", {
+                      {new Date(ev.created_at).toLocaleString("de-CH", {
                         day: "2-digit",
                         month: "short",
                         hour: "2-digit",

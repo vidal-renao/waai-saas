@@ -57,7 +57,7 @@ export function ChatWindow({ agentId, agentName, conversationId }: ChatWindowPro
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error ?? "Error al enviar el mensaje.");
+        setError(data.error ?? "Failed to send message. Please try again.");
         setMessages((prev) => prev.filter((m) => m.id !== tempId));
         return;
       }
@@ -89,7 +89,7 @@ export function ChatWindow({ agentId, agentName, conversationId }: ChatWindowPro
         });
       }
     } catch {
-      setError("Error de conexión. Inténtalo de nuevo.");
+      setError("Connection error. Please try again.");
       setMessages((prev) => prev.filter((m) => m.id !== tempId));
     } finally {
       setLoading(false);

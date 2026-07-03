@@ -15,7 +15,7 @@ export function MessageInput({
   onChange,
   onSend,
   disabled,
-  placeholder = "Escribe un mensaje de prueba...",
+  placeholder = "Type a test message...",
 }: MessageInputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -56,7 +56,7 @@ export function MessageInput({
         onClick={onSend}
         disabled={disabled || !value.trim()}
         className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-green-600 text-white transition-colors hover:bg-green-500 disabled:cursor-not-allowed disabled:opacity-50"
-        aria-label="Enviar mensaje"
+        aria-label="Send message"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -10,12 +10,15 @@ export function KnowledgeDocumentList({ documents }: KnowledgeDocumentListProps)
   if (documents.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-zinc-700 bg-zinc-900/50 p-8 text-center">
-        <p className="text-zinc-400">No hay documentos de conocimiento todavía.</p>
+        <p className="text-zinc-400">No knowledge documents yet.</p>
+        <p className="mt-1 text-sm text-zinc-500">
+          Add your first document so your AI Employees can answer with accurate information.
+        </p>
         <Link
           href="/dashboard/knowledge/new"
-          className="mt-3 inline-block rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-500"
+          className="mt-4 inline-block rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-500"
         >
-          Crear primer documento
+          Add First Document
         </Link>
       </div>
     );

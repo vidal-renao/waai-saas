@@ -1,11 +1,11 @@
 import type { WaaiKnowledgeDocumentStatus } from "@/types/database";
 
 const STATUS_LABELS: Record<WaaiKnowledgeDocumentStatus, string> = {
-  draft: "Borrador",
-  processing: "Procesando",
-  ready: "Listo",
+  draft: "Draft",
+  processing: "Processing",
+  ready: "Ready",
   failed: "Error",
-  archived: "Archivado",
+  archived: "Archived",
 };
 
 const STATUS_COLORS: Record<WaaiKnowledgeDocumentStatus, string> = {

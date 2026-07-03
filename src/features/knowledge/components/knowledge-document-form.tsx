@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { KNOWLEDGE_SOURCE_TYPES } from "@/lib/validators/knowledge";
 
 const SOURCE_LABELS: Record<string, string> = {
-  manual: "Texto manual",
-  txt: "Archivo TXT (pegar contenido)",
+  manual: "Plain Text",
+  txt: "TXT File (paste content)",
   markdown: "Markdown",
-  faq: "FAQ (Preguntas y Respuestas)",
+  faq: "FAQ (Questions & Answers)",
 };
 
 export function KnowledgeDocumentForm() {
@@ -37,12 +37,12 @@ export function KnowledgeDocumentForm() {
       });
       const result = await res.json();
       if (!res.ok) {
-        setError(result.error ?? "Error al crear el documento.");
+        setError(result.error ?? "Failed to create document. Please try again.");
       } else {
         router.push(`/dashboard/knowledge/${result.id}`);
       }
     } catch {
-      setError("Error de conexión. Inténtalo de nuevo.");
+      setError("Connection error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -58,7 +58,7 @@ export function KnowledgeDocumentForm() {
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="title" className="text-sm font-medium text-zinc-300">
-          Título <span className="text-red-400">*</span>
+          Title <span className="text-red-400">*</span>
         </label>
         <input
           id="title"
@@ -66,28 +66,28 @@ export function KnowledgeDocumentForm() {
           type="text"
           required
           maxLength={200}
-          placeholder="Ej: Catálogo de servicios 2026"
+          placeholder="e.g. Service Catalogue 2026"
           className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-600 focus:border-green-500 focus:outline-none"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="description" className="text-sm font-medium text-zinc-300">
-          Descripción (opcional)
+          Description (optional)
         </label>
         <input
           id="description"
           name="description"
           type="text"
           maxLength={500}
-          placeholder="Breve descripción del contenido"
+          placeholder="Brief description of the content"
           className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-600 focus:border-green-500 focus:outline-none"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="source_type" className="text-sm font-medium text-zinc-300">
-          Tipo de fuente <span className="text-red-400">*</span>
+          Content type <span className="text-red-400">*</span>
         </label>
         <select
           id="source_type"
@@ -104,7 +104,7 @@ export function KnowledgeDocumentForm() {
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="text_content" className="text-sm font-medium text-zinc-300">
-          Contenido <span className="text-red-400">*</span>
+          Content <span className="text-red-400">*</span>
         </label>
         <textarea
           id="text_content"
@@ -113,10 +113,10 @@ export function KnowledgeDocumentForm() {
           minLength={10}
           maxLength={200000}
           rows={14}
-          placeholder="Pega aquí el contenido del documento…"
+          placeholder="Paste or type the document content here…"
           className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-600 focus:border-green-500 focus:outline-none"
         />
-        <p className="text-xs text-zinc-600">Máximo 200,000 caracteres.</p>
+        <p className="text-xs text-zinc-600">Maximum 200,000 characters.</p>
       </div>
 
       <button
@@ -124,7 +124,7 @@ export function KnowledgeDocumentForm() {
         disabled={loading}
         className="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-green-500 disabled:opacity-50"
       >
-        {loading ? "Creando…" : "Crear documento"}
+        {loading ? "Creating…" : "Create Document"}
       </button>
     </form>
   );

@@ -19,9 +19,9 @@ export default async function NewKnowledgePage() {
         >
           ← Knowledge Base
         </Link>
-        <h1 className="mt-2 text-2xl font-bold text-white">Nuevo documento</h1>
+        <h1 className="mt-2 text-2xl font-bold text-white">Add Knowledge Document</h1>
         <p className="mt-1 text-sm text-zinc-400">
-          Añade conocimiento del negocio para que tus agentes puedan usarlo al responder.
+          Add business knowledge so your AI Employees can answer customer questions accurately.
         </p>
       </div>
 

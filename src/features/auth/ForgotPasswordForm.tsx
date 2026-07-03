@@ -45,8 +45,8 @@ export function ForgotPasswordForm() {
   if (sent) {
     return (
       <div className="rounded-lg bg-green-900/20 px-4 py-4 text-sm text-green-400">
-        Si existe una cuenta con ese email, te hemos enviado un enlace para
-        restablecer tu contraseña. Revisa tu bandeja de entrada.
+        If an account exists for that email address, we&apos;ve sent a password reset link.
+        Please check your inbox.
       </div>
     );
   }
@@ -62,7 +62,7 @@ export function ForgotPasswordForm() {
           type="email"
           autoComplete="email"
           className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none"
-          placeholder="tu@empresa.com"
+          placeholder="you@company.com"
           {...register("email")}
         />
         {errors.email && (
@@ -77,7 +77,7 @@ export function ForgotPasswordForm() {
       )}
 
       <Button type="submit" disabled={isSubmitting} className="mt-1 w-full">
-        {isSubmitting ? "Enviando..." : "Enviar enlace de recuperación"}
+        {isSubmitting ? "Sending..." : "Send Reset Link"}
       </Button>
     </form>
   );

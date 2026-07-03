@@ -21,13 +21,13 @@ export default async function UsageAnalyticsPage() {
         <Link href="/dashboard/analytics" className="text-sm text-zinc-500 hover:text-zinc-300">
           ← Analytics
         </Link>
-        <h1 className="mt-2 text-xl font-bold text-white">Uso del plan</h1>
+        <h1 className="mt-2 text-xl font-bold text-white">Plan Usage</h1>
         <p className="mt-1 text-xs text-zinc-500">
-          Plan activo:{" "}
-          <span className="font-semibold text-zinc-300 capitalize">{usage.plan_name}</span>
+          Active plan:{" "}
+          <span className="font-semibold capitalize text-zinc-300">{usage.plan_name}</span>
           {usage.human_handoff_enabled && (
             <span className="ml-2 rounded-full bg-green-900/40 px-2 py-0.5 text-xs text-green-400">
-              Human Handoff
+              Human Transfer enabled
             </span>
           )}
         </p>
@@ -35,14 +35,14 @@ export default async function UsageAnalyticsPage() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <UsageLimitCard
-          label="Mensajes este mes"
+          label="Messages this month"
           used={usage.messages_used}
           limit={usage.messages_limit}
           pct={usage.messages_pct}
           severity={usage.messages_severity}
         />
         <UsageLimitCard
-          label="Agentes activos"
+          label="AI Employees"
           used={usage.agents_used}
           limit={usage.agents_limit}
           pct={usage.agents_pct}
@@ -55,7 +55,7 @@ export default async function UsageAnalyticsPage() {
           }
         />
         <UsageLimitCard
-          label="Documentos Knowledge"
+          label="Knowledge Documents"
           used={usage.documents_used}
           limit={usage.documents_limit}
           pct={usage.documents_pct}
@@ -68,7 +68,7 @@ export default async function UsageAnalyticsPage() {
           }
         />
         <UsageLimitCard
-          label="Conexiones WhatsApp"
+          label="WhatsApp Connections"
           used={usage.whatsapp_connections_used}
           limit={usage.whatsapp_numbers_limit}
           pct={usage.connections_pct}
@@ -83,9 +83,9 @@ export default async function UsageAnalyticsPage() {
       </div>
 
       <div className="mt-4 rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-        <p className="text-xs text-zinc-500 uppercase tracking-wider mb-2">Equipo</p>
+        <p className="mb-2 text-xs uppercase tracking-wider text-zinc-500">Team</p>
         <div className="flex items-center justify-between">
-          <span className="text-sm text-zinc-300">Miembros del workspace</span>
+          <span className="text-sm text-zinc-300">Team members</span>
           <span className="text-sm font-bold text-white">{usage.members_count}</span>
         </div>
       </div>
