@@ -27,11 +27,11 @@ export function WhatsappConnectionForm({ agents, showMockProvider = false }: Pro
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!form.displayName.trim()) {
-      setError("El nombre es obligatorio.");
+      setError("Connection name is required.");
       return;
     }
     if (form.provider === "meta" && !form.phoneNumberId.trim()) {
-      setError("El Phone Number ID es obligatorio para Meta Cloud API.");
+      setError("Phone Number ID is required for Meta Cloud API.");
       return;
     }
     setLoading(true);
@@ -54,12 +54,12 @@ export function WhatsappConnectionForm({ agents, showMockProvider = false }: Pro
 
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Error al crear la conexión.");
+        setError(data.error ?? "Failed to create connection.");
         return;
       }
       router.push(`/dashboard/whatsapp/${data.id}`);
     } catch {
-      setError("Error de conexión.");
+      setError("Connection error.");
     } finally {
       setLoading(false);
     }

@@ -22,8 +22,8 @@ export function OperationalAlertsPanel({ alerts, maxVisible = 10 }: OperationalA
   if (alerts.length === 0) {
     return (
       <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
-        <h3 className="text-sm font-semibold text-zinc-300 mb-2">Alertas operativas</h3>
-        <p className="text-xs text-zinc-500">Sin alertas activas. Todo funciona correctamente.</p>
+        <h3 className="text-sm font-semibold text-zinc-300 mb-2">Operational Alerts</h3>
+        <p className="text-xs text-zinc-500">No active alerts. Everything is running smoothly.</p>
       </div>
     );
   }
@@ -34,7 +34,7 @@ export function OperationalAlertsPanel({ alerts, maxVisible = 10 }: OperationalA
   return (
     <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-zinc-300">Alertas operativas</h3>
+        <h3 className="text-sm font-semibold text-zinc-300">Operational Alerts</h3>
         <span className="rounded-full bg-red-900/40 px-2 py-0.5 text-xs font-medium text-red-400">
           {alerts.length}
         </span>
@@ -58,7 +58,7 @@ export function OperationalAlertsPanel({ alerts, maxVisible = 10 }: OperationalA
         })}
         {hidden > 0 && (
           <p className="text-center text-xs text-zinc-500 pt-1">
-            +{hidden} alerta{hidden !== 1 ? "s" : ""} más
+            +{hidden} more alert{hidden !== 1 ? "s" : ""}
           </p>
         )}
       </div>

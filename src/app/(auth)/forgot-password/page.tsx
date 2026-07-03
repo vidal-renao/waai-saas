@@ -8,16 +8,16 @@ export default function ForgotPasswordPage() {
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="text-xl font-semibold text-white">
-          Recuperar contraseña
+          Forgot Password
         </h1>
         <p className="mt-1 text-sm text-zinc-400">
-          Introduce tu email y te enviaremos un enlace para restablecerla.
+          Enter your email and we&apos;ll send you a link to reset it.
         </p>
       </div>
       <ForgotPasswordForm />
       <p className="text-sm text-zinc-400">
         <Link href="/login" className="text-green-400 hover:text-green-300">
-          Volver a iniciar sesión
+          Back to sign in
         </Link>
       </p>
     </div>

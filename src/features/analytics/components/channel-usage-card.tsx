@@ -5,7 +5,7 @@ interface ChannelUsageCardProps {
   label?: string;
 }
 
-export function ChannelUsageCard({ whatsapp, sandbox, web, label = "Conversaciones por canal" }: ChannelUsageCardProps) {
+export function ChannelUsageCard({ whatsapp, sandbox, web, label = "Conversations by channel" }: ChannelUsageCardProps) {
   const total = whatsapp + sandbox + web;
 
   const channels = [
@@ -18,7 +18,7 @@ export function ChannelUsageCard({ whatsapp, sandbox, web, label = "Conversacion
     <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
       <h3 className="mb-4 text-sm font-semibold text-zinc-300">{label}</h3>
       {total === 0 ? (
-        <p className="text-xs text-zinc-500">Sin datos en el período seleccionado.</p>
+        <p className="text-xs text-zinc-500">No data for the selected period.</p>
       ) : (
         <div className="space-y-3">
           {channels.map(({ name, count, color }) => {

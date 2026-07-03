@@ -25,14 +25,14 @@ export function HandoffRequestButton({
         }
       );
       if (res.ok) {
-        setMessage("Handoff solicitado. Automatización pausada.");
+        setMessage("Transfer requested. AI automation paused.");
         router.refresh();
       } else {
         const d = await res.json() as { error?: string };
-        setMessage(d.error ?? "Error al solicitar handoff");
+        setMessage(d.error ?? "Failed to request transfer");
       }
     } catch {
-      setMessage("Error de red");
+      setMessage("Network error");
     } finally {
       setLoading(false);
     }
@@ -45,7 +45,7 @@ export function HandoffRequestButton({
         disabled={loading}
         className="rounded-lg bg-yellow-700 px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600 disabled:opacity-50"
       >
-        {loading ? "Solicitando..." : "Solicitar Handoff"}
+        {loading ? "Requesting..." : "Request Human Transfer"}
       </button>
       {message && <p className="mt-1 text-xs text-zinc-400">{message}</p>}
     </div>

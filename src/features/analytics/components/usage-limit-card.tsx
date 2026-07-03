@@ -7,7 +7,7 @@ interface UsageLimitCardProps {
 }
 
 function limitLabel(limit: number) {
-  return limit === -1 ? "Ilimitado" : limit.toLocaleString("es-ES");
+  return limit === -1 ? "Unlimited" : limit.toLocaleString("de-CH");
 }
 
 export function UsageLimitCard({ label, used, limit, pct, severity = "ok" }: UsageLimitCardProps) {
@@ -37,12 +37,12 @@ export function UsageLimitCard({ label, used, limit, pct, severity = "ok" }: Usa
                 : "bg-yellow-900/40 text-yellow-400"
             }`}
           >
-            {severity === "critical" ? "Crítico" : "Atención"}
+            {severity === "critical" ? "Critical" : "Warning"}
           </span>
         )}
       </div>
       <p className="mt-2 text-xl font-bold text-white">
-        {used.toLocaleString("es-ES")}
+        {used.toLocaleString("de-CH")}
         <span className="ml-1 text-sm font-normal text-zinc-400">
           / {limitLabel(limit)}
         </span>
@@ -55,7 +55,7 @@ export function UsageLimitCard({ label, used, limit, pct, severity = "ok" }: Usa
               style={{ width: `${Math.min(pct, 100)}%` }}
             />
           </div>
-          <p className="mt-1 text-xs text-zinc-500">{pct}% usado</p>
+          <p className="mt-1 text-xs text-zinc-500">{pct}% used</p>
         </div>
       )}
     </div>

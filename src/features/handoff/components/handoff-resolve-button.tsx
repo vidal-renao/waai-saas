@@ -27,14 +27,14 @@ export function HandoffResolveButton({
         }
       );
       if (res.ok) {
-        setMessage("Handoff resuelto. Automatización reanudada.");
+        setMessage("Transfer resolved. AI automation resumed.");
         router.refresh();
       } else {
         const d = await res.json() as { error?: string };
-        setMessage(d.error ?? "Error al resolver handoff");
+        setMessage(d.error ?? "Failed to resolve transfer");
       }
     } catch {
-      setMessage("Error de red");
+      setMessage("Network error");
     } finally {
       setLoading(false);
     }
@@ -47,7 +47,7 @@ export function HandoffResolveButton({
         disabled={loading}
         className="rounded-lg bg-green-700 px-4 py-2 text-sm font-medium text-white hover:bg-green-600 disabled:opacity-50"
       >
-        {loading ? "Resolviendo..." : "Resolver Handoff"}
+        {loading ? "Resolving..." : "Resolve Transfer"}
       </button>
       {message && <p className="mt-1 text-xs text-zinc-400">{message}</p>}
     </div>

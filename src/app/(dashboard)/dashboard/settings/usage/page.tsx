@@ -41,7 +41,7 @@ export default async function UsageSettingsPage() {
         <Link href="/dashboard/settings/billing" className="text-sm text-zinc-500 hover:text-zinc-300">
           ← Billing
         </Link>
-        <h1 className="mt-2 text-xl font-bold text-white">Uso del plan</h1>
+        <h1 className="mt-2 text-xl font-bold text-white">Plan Usage</h1>
         <p className="mt-1 text-xs text-zinc-500">
           Plan: <span className="font-semibold text-zinc-300 capitalize">{snapshot.planName}</span>
         </p>
@@ -69,7 +69,7 @@ export default async function UsageSettingsPage() {
           totalInputTokens={(cost.total_input_tokens as number) ?? 0}
           totalOutputTokens={(cost.total_output_tokens as number) ?? 0}
           estimatedCostCents={(cost.estimated_cost_cents as number) ?? 0}
-          period="Últimos 30 días"
+          period="Last 30 days"
         />
       )}
 
@@ -78,7 +78,7 @@ export default async function UsageSettingsPage() {
           href="/dashboard/analytics/usage"
           className="text-xs text-zinc-500 hover:text-zinc-300"
         >
-          Ver en Analytics →
+          View in Analytics →
         </Link>
       </div>
     </div>

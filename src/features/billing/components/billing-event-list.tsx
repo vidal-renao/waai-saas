@@ -12,7 +12,7 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("es-ES", {
+  return new Date(iso).toLocaleDateString("de-CH", {
     day: "2-digit", month: "short", year: "numeric",
   });
 }
@@ -21,9 +21,9 @@ export function BillingEventList({ events }: BillingEventListProps) {
   if (events.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-zinc-700 bg-zinc-900/50 p-6 text-center">
-        <p className="text-xs text-zinc-500">Sin eventos de billing registrados.</p>
+        <p className="text-xs text-zinc-500">No billing events recorded yet.</p>
         <p className="text-xs text-zinc-600 mt-1">
-          Los eventos aparecerán aquí cuando se active Stripe en Fase 9.
+          Events will appear here once Stripe is activated.
         </p>
       </div>
     );
@@ -39,7 +39,7 @@ export function BillingEventList({ events }: BillingEventListProps) {
                 {ev.event_type.replace(/_/g, " ")}
               </p>
               <p className="text-xs text-zinc-500">
-                {ev.provider ?? "sistema"} · {formatDate(ev.created_at)}
+                {ev.provider ?? "system"} · {formatDate(ev.created_at)}
               </p>
             </div>
             <div className="flex items-center gap-3 ml-4">

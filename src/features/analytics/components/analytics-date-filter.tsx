@@ -5,11 +5,11 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 type Preset = "today" | "7d" | "30d" | "month" | "custom";
 
 const PRESETS: { value: Preset; label: string }[] = [
-  { value: "today", label: "Hoy" },
-  { value: "7d", label: "7 días" },
-  { value: "30d", label: "30 días" },
-  { value: "month", label: "Este mes" },
-  { value: "custom", label: "Personalizado" },
+  { value: "today", label: "Today" },
+  { value: "7d", label: "7 days" },
+  { value: "30d", label: "30 days" },
+  { value: "month", label: "This month" },
+  { value: "custom", label: "Custom" },
 ];
 
 interface AnalyticsDateFilterProps {
@@ -89,7 +89,6 @@ function CustomRangePicker({
   to: string;
   onApply: (from: string, to: string) => void;
 }) {
-  // Local state managed with uncontrolled inputs + form submit
   return (
     <form
       className="flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2"
@@ -99,7 +98,7 @@ function CustomRangePicker({
         onApply(fd.get("from") as string, fd.get("to") as string);
       }}
     >
-      <label className="text-xs text-zinc-500">Desde</label>
+      <label className="text-xs text-zinc-500">From</label>
       <input
         type="date"
         name="from"
@@ -108,7 +107,7 @@ function CustomRangePicker({
         required
         className="rounded border border-zinc-700 bg-zinc-800 px-2 py-1 text-xs text-white scheme-dark"
       />
-      <label className="text-xs text-zinc-500">Hasta</label>
+      <label className="text-xs text-zinc-500">To</label>
       <input
         type="date"
         name="to"
@@ -121,7 +120,7 @@ function CustomRangePicker({
         type="submit"
         className="rounded-md bg-green-600 px-3 py-1 text-xs font-medium text-white hover:bg-green-500"
       >
-        Aplicar
+        Apply
       </button>
     </form>
   );

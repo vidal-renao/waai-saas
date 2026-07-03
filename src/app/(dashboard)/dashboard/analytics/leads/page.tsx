@@ -30,9 +30,9 @@ export default async function LeadsAnalyticsPage() {
         <Link href="/dashboard/analytics" className="text-sm text-zinc-500 hover:text-zinc-300">
           ← Analytics
         </Link>
-        <h1 className="mt-2 text-xl font-bold text-white">Leads & Conversión</h1>
+        <h1 className="mt-2 text-xl font-bold text-white">Leads & Conversion</h1>
         <p className="mt-1 text-xs text-zinc-500">
-          Embudo comercial y métricas de handoff
+          Sales funnel and transfer metrics
         </p>
       </div>
 
@@ -46,19 +46,19 @@ export default async function LeadsAnalyticsPage() {
           whatsapp={funnel.from_whatsapp}
           sandbox={funnel.from_sandbox}
           web={0}
-          label="Leads por canal de origen"
+          label="Leads by source channel"
         />
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
         {[
-          { label: "Urgente", count: funnel.urgent_count, color: "text-red-400" },
-          { label: "Alta", count: funnel.high_count, color: "text-orange-400" },
-          { label: "Media", count: funnel.medium_count, color: "text-yellow-400" },
-          { label: "Baja", count: funnel.low_count, color: "text-zinc-400" },
+          { label: "Urgent", count: funnel.urgent_count, color: "text-red-400" },
+          { label: "High", count: funnel.high_count, color: "text-orange-400" },
+          { label: "Medium", count: funnel.medium_count, color: "text-yellow-400" },
+          { label: "Low", count: funnel.low_count, color: "text-zinc-400" },
         ].map(({ label, count, color }) => (
           <div key={label} className="rounded-xl border border-zinc-800 bg-zinc-900 p-4 text-center">
-            <p className="text-xs text-zinc-500">Prioridad {label}</p>
+            <p className="text-xs text-zinc-500">Priority: {label}</p>
             <p className={`mt-1 text-2xl font-bold ${color}`}>{count}</p>
           </div>
         ))}

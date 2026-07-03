@@ -22,13 +22,13 @@ export function LeadAssignmentPanel({
         body: JSON.stringify({ assignedTo: null }),
       });
       if (res.ok) {
-        setMessage("Lead desasignado.");
+        setMessage("Lead unassigned.");
       } else {
         const d = await res.json() as { error?: string };
         setMessage(d.error ?? "Error");
       }
     } catch {
-      setMessage("Error de red");
+      setMessage("Network error");
     } finally {
       setLoading(false);
     }
@@ -36,20 +36,20 @@ export function LeadAssignmentPanel({
 
   return (
     <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-      <h4 className="mb-3 text-sm font-medium text-zinc-300">Asignación</h4>
+      <h4 className="mb-3 text-sm font-medium text-zinc-300">Assignment</h4>
       {currentAssignedTo ? (
         <div className="flex items-center gap-3">
-          <p className="text-sm text-zinc-400">Asignado</p>
+          <p className="text-sm text-zinc-400">Assigned</p>
           <button
             onClick={handleUnassign}
             disabled={loading}
             className="rounded-lg bg-zinc-800 px-3 py-1.5 text-xs text-zinc-300 hover:bg-zinc-700 disabled:opacity-50"
           >
-            Desasignar
+            Unassign
           </button>
         </div>
       ) : (
-        <p className="text-sm text-zinc-500">Sin asignar</p>
+        <p className="text-sm text-zinc-500">Unassigned</p>
       )}
       {message && <p className="mt-2 text-xs text-zinc-400">{message}</p>}
     </div>
