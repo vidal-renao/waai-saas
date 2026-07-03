@@ -12,20 +12,20 @@ export function WhatsappConnectionList({
   if (connections.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-zinc-700 bg-zinc-900/50 p-8 text-center">
-        <p className="text-zinc-400">No hay conexiones WhatsApp todavía.</p>
+        <p className="text-zinc-400">No WhatsApp connections yet.</p>
         {canCreate ? (
           <p className="mt-2 text-sm text-zinc-500">
             <Link
               href="/dashboard/whatsapp/new"
               className="text-green-400 hover:text-green-300 underline"
             >
-              Crear primera conexión
+              Create your first connection
             </Link>{" "}
-            para conectar tu número de WhatsApp.
+            to connect your WhatsApp number.
           </p>
         ) : (
           <p className="mt-2 text-sm text-zinc-500">
-            Tu plan no incluye conexiones WhatsApp. Actualiza tu plan.
+            Your plan does not include WhatsApp connections. Upgrade your plan.
           </p>
         )}
       </div>

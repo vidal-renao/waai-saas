@@ -1,10 +1,10 @@
 import type { WaaiHandoffStatus } from "@/types/database";
 
 const STATUS_CONFIG: Record<WaaiHandoffStatus, { label: string; className: string }> = {
-  requested: { label: "Solicitado", className: "text-yellow-400 bg-yellow-950/30 border-yellow-900/50" },
-  active:    { label: "Activo",     className: "text-orange-400 bg-orange-950/30 border-orange-900/50" },
-  resolved:  { label: "Resuelto",   className: "text-green-400 bg-green-950/30 border-green-900/50" },
-  canceled:  { label: "Cancelado",  className: "text-zinc-500 bg-zinc-900 border-zinc-800" },
+  requested: { label: "Requested", className: "text-yellow-400 bg-yellow-950/30 border-yellow-900/50" },
+  active:    { label: "Active",    className: "text-orange-400 bg-orange-950/30 border-orange-900/50" },
+  resolved:  { label: "Resolved",  className: "text-green-400 bg-green-950/30 border-green-900/50" },
+  canceled:  { label: "Cancelled", className: "text-zinc-500 bg-zinc-900 border-zinc-800" },
 };
 
 export function HandoffStatusBadge({ status }: { status: WaaiHandoffStatus }) {

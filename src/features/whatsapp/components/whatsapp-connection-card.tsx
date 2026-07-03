@@ -15,12 +15,12 @@ export function WhatsappConnectionCard({
     >
       <div className="flex min-w-0 flex-col gap-1">
         <span className="truncate text-sm font-medium text-white">
-          {connection.display_name ?? "Conexión WhatsApp"}
+          {connection.display_name ?? "WhatsApp Connection"}
         </span>
         <span className="text-xs text-zinc-500">
           {connection.phone_number
             ? `+${connection.phone_number}`
-            : "Sin número configurado"}{" "}
+            : "No number configured"}{" "}
           · {connection.provider}
         </span>
         {connection.last_error_message && (

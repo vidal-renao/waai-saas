@@ -49,7 +49,7 @@ export function LoginForm() {
           type="email"
           autoComplete="email"
           className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none"
-          placeholder="tu@empresa.com"
+          placeholder="you@company.com"
           {...register("email")}
         />
         {errors.email && (
@@ -59,7 +59,7 @@ export function LoginForm() {
 
       <div className="flex flex-col gap-1">
         <label htmlFor="password" className="text-sm text-zinc-300">
-          Contraseña
+          Password
         </label>
         <input
           id="password"
@@ -76,7 +76,7 @@ export function LoginForm() {
           href="/forgot-password"
           className="self-end text-xs text-zinc-400 hover:text-green-300"
         >
-          ¿Olvidaste tu contraseña?
+          Forgot your password?
         </Link>
       </div>
 
@@ -87,7 +87,7 @@ export function LoginForm() {
       )}
 
       <Button type="submit" disabled={isSubmitting} className="mt-1 w-full">
-        {isSubmitting ? "Iniciando sesión..." : "Iniciar sesión"}
+        {isSubmitting ? "Signing in..." : "Sign In"}
       </Button>
     </form>
   );

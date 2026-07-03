@@ -4,13 +4,13 @@ const CONFIG: Record<
   WaaiWhatsappConnectionStatus,
   { label: string; className: string }
 > = {
-  draft:                { label: "Borrador",       className: "text-zinc-400 bg-zinc-800 border-zinc-700" },
-  pending_verification: { label: "Verificando",    className: "text-yellow-400 bg-yellow-950/30 border-yellow-900/50" },
-  active:               { label: "Activa",         className: "text-green-400 bg-green-950/30 border-green-900/50" },
+  draft:                { label: "Draft",          className: "text-zinc-400 bg-zinc-800 border-zinc-700" },
+  pending_verification: { label: "Verifying",      className: "text-yellow-400 bg-yellow-950/30 border-yellow-900/50" },
+  active:               { label: "Active",         className: "text-green-400 bg-green-950/30 border-green-900/50" },
   failed:               { label: "Error",          className: "text-red-400 bg-red-950/30 border-red-900/50" },
-  suspended:            { label: "Suspendida",     className: "text-orange-400 bg-orange-950/30 border-orange-900/50" },
-  disconnected:         { label: "Desconectada",   className: "text-zinc-400 bg-zinc-800 border-zinc-700" },
-  archived:             { label: "Archivada",      className: "text-zinc-600 bg-zinc-900 border-zinc-800" },
+  suspended:            { label: "Suspended",      className: "text-orange-400 bg-orange-950/30 border-orange-900/50" },
+  disconnected:         { label: "Disconnected",   className: "text-zinc-400 bg-zinc-800 border-zinc-700" },
+  archived:             { label: "Archived",       className: "text-zinc-600 bg-zinc-900 border-zinc-800" },
 };
 
 export function WhatsappStatusBadge({

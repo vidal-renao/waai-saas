@@ -10,9 +10,9 @@ interface HealthCheckListProps {
 
 const STATUS_BADGE: Record<string, { bg: string; text: string; label: string }> = {
   ok:       { bg: "bg-green-900/40", text: "text-green-400",  label: "OK" },
-  degraded: { bg: "bg-yellow-900/40", text: "text-yellow-400", label: "Degradado" },
-  down:     { bg: "bg-red-900/40",    text: "text-red-400",    label: "Caído" },
-  missing:  { bg: "bg-zinc-800",      text: "text-zinc-500",   label: "No configurado" },
+  degraded: { bg: "bg-yellow-900/40", text: "text-yellow-400", label: "Degraded" },
+  down:     { bg: "bg-red-900/40",    text: "text-red-400",    label: "Down" },
+  missing:  { bg: "bg-zinc-800",      text: "text-zinc-500",   label: "Not configured" },
 };
 
 export function HealthCheckList({ checks }: HealthCheckListProps) {

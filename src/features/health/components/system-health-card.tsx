@@ -18,10 +18,10 @@ const STATUS_DOT: Record<string, string> = {
 };
 
 const STATUS_LABEL: Record<string, string> = {
-  ok:       "Operativo",
-  degraded: "Degradado",
-  down:     "Caído",
-  unknown:  "Desconocido",
+  ok:       "Operational",
+  degraded: "Degraded",
+  down:     "Down",
+  unknown:  "Unknown",
 };
 
 const OVERALL_BORDER: Record<string, string> = {
@@ -38,7 +38,7 @@ export function SystemHealthCard({
   return (
     <div className={`rounded-xl border bg-zinc-900 p-5 ${OVERALL_BORDER[overallStatus] ?? "border-zinc-800"}`}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-zinc-300">Estado del sistema</h3>
+        <h3 className="text-sm font-semibold text-zinc-300">System Status</h3>
         <div className="flex items-center gap-2">
           <span className={`h-2 w-2 rounded-full ${STATUS_DOT[overallStatus]}`} />
           <span className={`text-xs font-medium ${overallStatus === "ok" ? "text-green-400" : overallStatus === "degraded" ? "text-yellow-400" : "text-red-400"}`}>
@@ -63,7 +63,7 @@ export function SystemHealthCard({
 
       {lastChecked && (
         <p className="mt-4 text-xs text-zinc-600">
-          Última verificación: {new Date(lastChecked).toLocaleTimeString("es-ES")}
+          Last checked: {new Date(lastChecked).toLocaleTimeString("de-CH")}
         </p>
       )}
     </div>

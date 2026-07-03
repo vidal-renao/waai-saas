@@ -17,7 +17,7 @@ export function CreateLeadFromConversationButton({
   if (hasLead) {
     return (
       <span className="rounded-lg bg-green-950/30 px-3 py-1.5 text-xs font-medium text-green-400 border border-green-900/40">
-        Lead creado
+        Lead created
       </span>
     );
   }
@@ -30,14 +30,14 @@ export function CreateLeadFromConversationButton({
         method: "POST",
       });
       if (res.ok) {
-        setMessage("Lead creado.");
+        setMessage("Lead created.");
         router.refresh();
       } else {
         const d = await res.json() as { error?: string };
-        setMessage(d.error ?? "Error al crear lead");
+        setMessage(d.error ?? "Failed to create lead");
       }
     } catch {
-      setMessage("Error de red");
+      setMessage("Network error");
     } finally {
       setLoading(false);
     }
@@ -50,7 +50,7 @@ export function CreateLeadFromConversationButton({
         disabled={loading}
         className="rounded-lg bg-green-700 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-600 disabled:opacity-50"
       >
-        {loading ? "Creando..." : "Crear Lead"}
+        {loading ? "Creating..." : "Create Lead"}
       </button>
       {message && <p className="text-xs text-zinc-400">{message}</p>}
     </div>
