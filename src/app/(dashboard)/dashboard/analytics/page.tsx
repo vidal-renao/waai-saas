@@ -57,7 +57,7 @@ export default async function AnalyticsPage({
         <div>
           <h1 className="text-xl font-bold text-white">Analytics</h1>
           <p className="mt-1 text-xs text-zinc-500">
-            Métricas operativas de tu workspace de IA
+            Operational metrics for your AI workspace
           </p>
         </div>
         <AnalyticsDateFilter currentPreset={preset} currentFrom={from} currentTo={to} />
@@ -74,22 +74,22 @@ export default async function AnalyticsPage({
       {d ? (
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
-            <MetricCard label="Conversaciones" value={d.conversations_in_period} sub="En el período" />
-            <MetricCard label="Mensajes" value={d.messages_in_period} sub="En el período" />
-            <MetricCard label="Leads" value={d.leads_in_period} sub="Creados en período" />
+            <MetricCard label="Conversations" value={d.conversations_in_period} sub="In period" />
+            <MetricCard label="Messages" value={d.messages_in_period} sub="In period" />
+            <MetricCard label="Leads" value={d.leads_in_period} sub="Created in period" />
             <MetricCard
-              label="Handoffs activos"
+              label="Active Transfers"
               value={d.open_handoffs}
-              sub="Requieren atención"
+              sub="Need attention"
               highlight={d.open_handoffs > 0}
             />
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
-            <MetricCard label="Total conversaciones" value={d.total_conversations} sub="Histórico" />
-            <MetricCard label="Agentes activos" value={d.active_agents} />
-            <MetricCard label="Conexiones WhatsApp" value={d.active_whatsapp_connections} />
-            <MetricCard label="Conversaciones abiertas" value={d.open_conversations} />
+            <MetricCard label="Total Conversations" value={d.total_conversations} sub="All time" />
+            <MetricCard label="Active AI Employees" value={d.active_agents} />
+            <MetricCard label="WhatsApp Connections" value={d.active_whatsapp_connections} />
+            <MetricCard label="Open Conversations" value={d.open_conversations} />
           </div>
 
           <div className="grid gap-4 lg:grid-cols-2 mb-6">
@@ -117,7 +117,7 @@ export default async function AnalyticsPage({
                 claudeErrors={d.error_runs}
                 whatsappFailed={d.wa_failed}
                 docsFailed={d.docs_failed}
-                period={`período seleccionado`}
+                period="selected period"
               />
             </div>
           )}
@@ -139,7 +139,7 @@ export default async function AnalyticsPage({
         </>
       ) : (
         <div className="rounded-xl border border-dashed border-zinc-700 bg-zinc-900/50 p-8 text-center">
-          <p className="text-zinc-400">Sin datos disponibles para el período seleccionado.</p>
+          <p className="text-zinc-400">No data available for the selected period.</p>
         </div>
       )}
 
@@ -150,24 +150,24 @@ export default async function AnalyticsPage({
             href="/dashboard/analytics/agents"
             className="rounded-xl border border-zinc-800 bg-zinc-900 p-4 hover:border-zinc-600 transition-colors"
           >
-            <p className="text-sm font-medium text-white">Rendimiento por agente →</p>
-            <p className="mt-1 text-xs text-zinc-500">Conversaciones, leads y errores por agente</p>
+            <p className="text-sm font-medium text-white">AI Employee Performance →</p>
+            <p className="mt-1 text-xs text-zinc-500">Conversations, leads and errors per AI Employee</p>
           </Link>
         )}
         <Link
           href="/dashboard/analytics/leads"
           className="rounded-xl border border-zinc-800 bg-zinc-900 p-4 hover:border-zinc-600 transition-colors"
         >
-          <p className="text-sm font-medium text-white">Embudo de leads →</p>
-          <p className="mt-1 text-xs text-zinc-500">Conversión y estado de oportunidades</p>
+          <p className="text-sm font-medium text-white">Lead Funnel →</p>
+          <p className="mt-1 text-xs text-zinc-500">Conversion and opportunity status</p>
         </Link>
         {canViewAi && (
           <Link
             href="/dashboard/analytics/usage"
             className="rounded-xl border border-zinc-800 bg-zinc-900 p-4 hover:border-zinc-600 transition-colors"
           >
-            <p className="text-sm font-medium text-white">Uso del plan →</p>
-            <p className="mt-1 text-xs text-zinc-500">Límites y consumo actual</p>
+            <p className="text-sm font-medium text-white">Plan Usage →</p>
+            <p className="mt-1 text-xs text-zinc-500">Current limits and usage</p>
           </Link>
         )}
       </div>

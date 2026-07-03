@@ -58,7 +58,7 @@ export default async function WhatsappConnectionDetailPage({
           </Link>
           <div className="mt-2 flex items-center gap-3">
             <h1 className="text-2xl font-bold text-white">
-              {connection.display_name ?? "Conexión WhatsApp"}
+              {connection.display_name ?? "WhatsApp Connection"}
             </h1>
             <WhatsappStatusBadge status={connection.status} />
             <WhatsappProviderBadge provider={connection.provider} />
@@ -66,7 +66,7 @@ export default async function WhatsappConnectionDetailPage({
           <p className="mt-1 text-sm text-zinc-400">
             {connection.phone_number
               ? `+${connection.phone_number}`
-              : "Sin número configurado"}
+              : "No number configured"}
           </p>
         </div>
         {canManage && (
@@ -74,7 +74,7 @@ export default async function WhatsappConnectionDetailPage({
             href={`/dashboard/whatsapp/${connectionId}/test`}
             className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm font-medium text-zinc-300 hover:bg-zinc-700 transition-colors"
           >
-            Probar conexión
+            Test Connection
           </Link>
         )}
       </div>
@@ -82,7 +82,7 @@ export default async function WhatsappConnectionDetailPage({
       {/* Error banner */}
       {connection.last_error_message && (
         <div className="mb-4 rounded-xl border border-red-800 bg-red-950/20 p-4 text-sm text-red-400">
-          <strong>Último error:</strong> {connection.last_error_message}
+          <strong>Last error:</strong> {connection.last_error_message}
         </div>
       )}
 
@@ -90,7 +90,7 @@ export default async function WhatsappConnectionDetailPage({
         {/* Agent assignment */}
         <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5 flex flex-col gap-3">
           <p className="text-xs uppercase tracking-wider text-zinc-500">
-            Agente asignado
+            Assigned AI Employee
           </p>
           {assignedAgent ? (
             <div className="flex items-center justify-between">
@@ -102,12 +102,12 @@ export default async function WhatsappConnectionDetailPage({
                 href={`/dashboard/agents/${assignedAgent.id}`}
                 className="text-xs text-green-400 hover:text-green-300"
               >
-                Ver agente →
+                View AI Employee →
               </Link>
             </div>
           ) : (
             <p className="text-sm text-zinc-500">
-              Sin agente asignado. Edita la conexión para asignar uno.
+              No AI Employee assigned. Edit the connection to assign one.
             </p>
           )}
         </div>
@@ -115,23 +115,23 @@ export default async function WhatsappConnectionDetailPage({
         {/* Connection details */}
         <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5 flex flex-col gap-2 text-sm">
           <p className="text-xs uppercase tracking-wider text-zinc-500 mb-1">
-            Detalles
+            Details
           </p>
           <Row label="Provider" value={connection.provider} />
           {connection.phone_number && (
-            <Row label="Número" value={`+${connection.phone_number}`} />
+            <Row label="Phone" value={`+${connection.phone_number}`} />
           )}
           {connection.external_instance_id && (
             <Row label="Instance ID" value={connection.external_instance_id} />
           )}
           <Row
-            label="Creada"
-            value={new Date(connection.created_at).toLocaleDateString("es-ES")}
+            label="Created"
+            value={new Date(connection.created_at).toLocaleDateString("de-CH")}
           />
           {connection.last_connected_at && (
             <Row
-              label="Última conexión"
-              value={new Date(connection.last_connected_at).toLocaleString("es-ES")}
+              label="Last Connected"
+              value={new Date(connection.last_connected_at).toLocaleString("de-CH")}
             />
           )}
         </div>

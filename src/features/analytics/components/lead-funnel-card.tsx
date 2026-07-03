@@ -6,11 +6,11 @@ interface LeadFunnelCardProps {
 }
 
 const STAGES = [
-  { key: "new_count", label: "Nuevo", color: "bg-zinc-500" },
-  { key: "qualified_count", label: "Cualificado", color: "bg-blue-500" },
-  { key: "contacted_count", label: "Contactado", color: "bg-yellow-500" },
-  { key: "won_count", label: "Ganado", color: "bg-green-500" },
-  { key: "lost_count", label: "Perdido", color: "bg-red-500" },
+  { key: "new_count", label: "New", color: "bg-zinc-500" },
+  { key: "qualified_count", label: "Qualified", color: "bg-blue-500" },
+  { key: "contacted_count", label: "Contacted", color: "bg-yellow-500" },
+  { key: "won_count", label: "Won", color: "bg-green-500" },
+  { key: "lost_count", label: "Lost", color: "bg-red-500" },
 ] as const;
 
 export function LeadFunnelCard({ funnel }: LeadFunnelCardProps) {
@@ -19,9 +19,9 @@ export function LeadFunnelCard({ funnel }: LeadFunnelCardProps) {
   return (
     <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-zinc-300">Embudo de Leads</h3>
+        <h3 className="text-sm font-semibold text-zinc-300">Lead Funnel</h3>
         <span className="text-xs text-zinc-500">
-          Conversión: <span className="text-green-400 font-semibold">{conversionRate}%</span>
+          Conversion: <span className="text-green-400 font-semibold">{conversionRate}%</span>
         </span>
       </div>
       <div className="space-y-2">
@@ -45,7 +45,7 @@ export function LeadFunnelCard({ funnel }: LeadFunnelCardProps) {
       </div>
       <div className="mt-4 grid grid-cols-3 gap-2 border-t border-zinc-800 pt-4">
         <div className="text-center">
-          <p className="text-xs text-zinc-500">Total activos</p>
+          <p className="text-xs text-zinc-500">Total active</p>
           <p className="text-lg font-bold text-white">{funnel.active_total}</p>
         </div>
         <div className="text-center">

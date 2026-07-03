@@ -12,7 +12,7 @@ export function AgentLimitWarning({
   variant = "warning",
 }: AgentLimitWarningProps) {
   const isError = variant === "error" || current >= limit;
-  const limitLabel = limit === -1 ? "Ilimitado" : limit.toString();
+  const limitLabel = limit === -1 ? "Unlimited" : limit.toString();
 
   return (
     <div
@@ -24,24 +24,24 @@ export function AgentLimitWarning({
     >
       {isError ? (
         <>
-          <span className="font-medium">Límite de agentes alcanzado</span>
+          <span className="font-medium">AI Employee limit reached</span>
           <span className="text-xs ml-2">
             ({current}/{limitLabel})
           </span>
           <span className="ml-2">
-            Para crear más agentes,{" "}
+            To create more AI Employees,{" "}
             <Link
               href="/dashboard"
               className="underline hover:no-underline"
             >
-              actualiza tu plan
+              upgrade your plan
             </Link>
             .
           </span>
         </>
       ) : (
         <span>
-          Usando {current} de {limitLabel} agentes disponibles en tu plan.
+          Using {current} of {limitLabel} AI Employees on your plan.
         </span>
       )}
     </div>

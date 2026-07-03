@@ -54,20 +54,20 @@ export function ResetPasswordForm() {
   }
 
   if (sessionState === "checking") {
-    return <p className="text-sm text-zinc-400">Verificando enlace...</p>;
+    return <p className="text-sm text-zinc-400">Verifying link...</p>;
   }
 
   if (sessionState === "invalid") {
     return (
       <div className="flex flex-col gap-3">
         <p className="rounded-lg bg-red-900/20 px-3 py-2 text-sm text-red-400">
-          El enlace de recuperación no es válido o ha caducado.
+          The recovery link is invalid or has expired.
         </p>
         <Link
           href="/forgot-password"
           className="text-sm text-green-400 hover:text-green-300"
         >
-          Solicitar un nuevo enlace
+          Request a new link
         </Link>
       </div>
     );
@@ -77,7 +77,7 @@ export function ResetPasswordForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
         <label htmlFor="password" className="text-sm text-zinc-300">
-          Nueva contraseña
+          New Password
         </label>
         <input
           id="password"
@@ -94,7 +94,7 @@ export function ResetPasswordForm() {
 
       <div className="flex flex-col gap-1">
         <label htmlFor="confirmPassword" className="text-sm text-zinc-300">
-          Confirmar contraseña
+          Confirm Password
         </label>
         <input
           id="confirmPassword"
@@ -118,7 +118,7 @@ export function ResetPasswordForm() {
       )}
 
       <Button type="submit" disabled={isSubmitting} className="mt-1 w-full">
-        {isSubmitting ? "Guardando..." : "Actualizar contraseña"}
+        {isSubmitting ? "Saving..." : "Update Password"}
       </Button>
     </form>
   );

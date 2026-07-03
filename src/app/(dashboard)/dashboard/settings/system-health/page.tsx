@@ -135,9 +135,9 @@ export default async function SystemHealthPage() {
 
       <div className="mt-4 rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
         <p className="text-xs text-zinc-500">
-          Health check público disponible en{" "}
+          Public health check available at{" "}
           <span className="font-mono text-zinc-400">/api/health</span>.
-          Los checks detallados requieren <span className="font-mono text-zinc-400">x-internal-secret</span>.
+          Detailed checks require <span className="font-mono text-zinc-400">x-internal-secret</span>.
         </p>
       </div>
     </div>

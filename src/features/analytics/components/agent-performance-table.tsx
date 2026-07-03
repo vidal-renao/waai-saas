@@ -1,10 +1,10 @@
 import type { AgentPerformanceRow } from "@/server/repositories/analytics-repository";
 
 const STATUS_LABELS: Record<string, string> = {
-  active: "Activo",
-  paused: "Pausado",
-  draft: "Borrador",
-  archived: "Archivado",
+  active: "Active",
+  paused: "Paused",
+  draft: "Draft",
+  archived: "Archived",
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -27,7 +27,7 @@ export function AgentPerformanceTable({ agents }: AgentPerformanceTableProps) {
   if (agents.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-zinc-700 bg-zinc-900/50 p-8 text-center">
-        <p className="text-zinc-400">Sin agentes en este período.</p>
+        <p className="text-zinc-400">No AI Employees in this period.</p>
       </div>
     );
   }
@@ -37,14 +37,14 @@ export function AgentPerformanceTable({ agents }: AgentPerformanceTableProps) {
       <table className="w-full text-sm">
         <thead className="bg-zinc-900">
           <tr className="border-b border-zinc-800">
-            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Agente</th>
-            <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-zinc-500">Convers.</th>
-            <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-zinc-500">Mensajes</th>
+            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">AI Employee</th>
+            <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-zinc-500">Chats</th>
+            <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-zinc-500">Messages</th>
             <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-zinc-500">Leads</th>
-            <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-zinc-500">Handoffs</th>
-            <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-zinc-500">RAG %</th>
-            <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-zinc-500">Errores</th>
-            <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-zinc-500">Latencia</th>
+            <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-zinc-500">Transfers</th>
+            <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-zinc-500">Knowledge %</th>
+            <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-zinc-500">Errors</th>
+            <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-zinc-500">Latency</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-zinc-800 bg-zinc-950">

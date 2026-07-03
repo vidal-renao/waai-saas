@@ -22,10 +22,10 @@ export default async function OnboardingPage() {
       <div className="w-full max-w-lg">
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-white">
-            Configura tu workspace
+            Set Up Your Workspace
           </h1>
           <p className="mt-2 text-zinc-400">
-            Cuéntanos sobre tu negocio para crear tu agente de WhatsApp.
+            Tell us about your business to get started.
           </p>
         </div>
         <CreateWorkspaceForm />

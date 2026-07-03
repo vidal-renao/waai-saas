@@ -11,26 +11,29 @@ import {
 import { Button } from "@/components/ui/button";
 
 const BUSINESS_TYPES = [
-  "Limpieza",
-  "Restaurante / Cafetería",
-  "Clínica / Salud",
-  "Inmobiliaria",
-  "Academia / Formación",
-  "Construcción / Reformas",
-  "Ecommerce",
-  "Consultoría / Coaching",
-  "Logística",
-  "Tecnología / IT",
-  "Otro",
+  "Cleaning Services",
+  "Restaurant / Café",
+  "Healthcare / Medical",
+  "Real Estate",
+  "Education / Training",
+  "Construction / Renovation",
+  "E-Commerce",
+  "Consulting / Coaching",
+  "Logistics",
+  "Technology / IT",
+  "Financial Services",
+  "Legal",
+  "Hospitality",
+  "Other",
 ];
 
 const COUNTRIES = [
-  { code: "ES", name: "España" },
-  { code: "CH", name: "Suiza" },
-  { code: "MX", name: "México" },
-  { code: "AR", name: "Argentina" },
-  { code: "CO", name: "Colombia" },
-  { code: "CL", name: "Chile" },
+  { code: "CH", name: "Switzerland" },
+  { code: "DE", name: "Germany" },
+  { code: "AT", name: "Austria" },
+  { code: "LI", name: "Liechtenstein" },
+  { code: "FR", name: "France" },
+  { code: "IT", name: "Italy" },
 ];
 
 export function CreateWorkspaceForm() {
@@ -43,7 +46,7 @@ export function CreateWorkspaceForm() {
     formState: { errors, isSubmitting },
   } = useForm<CreateWorkspaceSchema>({
     resolver: zodResolver(createWorkspaceSchema),
-    defaultValues: { country: "ES" },
+    defaultValues: { country: "CH" },
   });
 
   async function onSubmit(values: CreateWorkspaceSchema) {
@@ -56,7 +59,7 @@ export function CreateWorkspaceForm() {
 
     const json = await res.json() as { error?: string };
     if (!res.ok) {
-      setServerError(json.error ?? "Error al crear el workspace");
+      setServerError(json.error ?? "Failed to create workspace");
       return;
     }
 
@@ -68,13 +71,13 @@ export function CreateWorkspaceForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
       <div className="flex flex-col gap-1">
         <label htmlFor="name" className="text-sm text-zinc-300">
-          Nombre de tu empresa *
+          Company Name *
         </label>
         <input
           id="name"
           type="text"
           className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none"
-          placeholder="Ej. Clínica Bienestar"
+          placeholder="e.g. Müller GmbH"
           {...register("name")}
         />
         {errors.name && (
@@ -84,14 +87,14 @@ export function CreateWorkspaceForm() {
 
       <div className="flex flex-col gap-1">
         <label htmlFor="businessType" className="text-sm text-zinc-300">
-          Sector
+          Industry
         </label>
         <select
           id="businessType"
           className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white focus:border-green-500 focus:outline-none"
           {...register("businessType")}
         >
-          <option value="">Selecciona tu sector</option>
+          <option value="">Select your industry</option>
           {BUSINESS_TYPES.map((t) => (
             <option key={t} value={t}>
               {t}
@@ -102,7 +105,7 @@ export function CreateWorkspaceForm() {
 
       <div className="flex flex-col gap-1">
         <label htmlFor="country" className="text-sm text-zinc-300">
-          País
+          Country
         </label>
         <select
           id="country"
@@ -127,7 +130,7 @@ export function CreateWorkspaceForm() {
       )}
 
       <Button type="submit" disabled={isSubmitting} className="mt-2 w-full">
-        {isSubmitting ? "Creando workspace..." : "Crear workspace y continuar"}
+        {isSubmitting ? "Creating workspace..." : "Create Workspace & Continue"}
       </Button>
     </form>
   );

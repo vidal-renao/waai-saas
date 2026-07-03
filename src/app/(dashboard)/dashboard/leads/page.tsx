@@ -25,7 +25,7 @@ export default async function LeadsPage() {
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-white">Leads</h1>
         <p className="mt-1 text-sm text-zinc-400">
-          Oportunidades comerciales detectadas por el agente o creadas manualmente.
+          Business opportunities detected by your AI Employee or created manually.
         </p>
       </div>
       <LeadList leads={leads} />

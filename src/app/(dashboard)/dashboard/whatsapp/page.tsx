@@ -30,8 +30,7 @@ export default async function WhatsappPage() {
         <div>
           <h1 className="text-2xl font-bold text-white">WhatsApp</h1>
           <p className="mt-1 text-sm text-zinc-400">
-            {connectionCount} conexión{connectionCount !== 1 ? "es" : ""} activa
-            {connectionCount !== 1 ? "s" : ""}
+            {connectionCount} active connection{connectionCount !== 1 ? "s" : ""}
           </p>
         </div>
         {canCreate && (
@@ -39,12 +38,12 @@ export default async function WhatsappPage() {
             href="/dashboard/whatsapp/new"
             className="rounded-lg bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-600 transition-colors"
           >
-            + Nueva conexión
+            + New Connection
           </Link>
         )}
         {!canCreate && connections.length === 0 && (
           <span className="rounded-full border border-yellow-800 bg-yellow-950/20 px-3 py-1 text-xs text-yellow-400">
-            Límite del plan alcanzado
+            Plan limit reached
           </span>
         )}
       </div>
@@ -52,12 +51,12 @@ export default async function WhatsappPage() {
       <WhatsappConnectionList connections={connections} canCreate={canCreate} />
 
       <div className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900/50 p-5">
-        <p className="text-xs font-medium text-zinc-400 mb-3">¿Cómo funciona?</p>
+        <p className="text-xs font-medium text-zinc-400 mb-3">How it works</p>
         <ol className="text-xs text-zinc-500 space-y-1 list-decimal list-inside">
-          <li>Crea una conexión con tu Phone Number ID y token de Meta.</li>
-          <li>Copia la URL del webhook y configúrala en Meta Business → WhatsApp → Configuración API.</li>
-          <li>Usa el simulador para probar sin necesidad de WhatsApp real.</li>
-          <li>Cuando todo funcione, activa la conexión y recibe mensajes reales.</li>
+          <li>Create a connection with your Phone Number ID and Meta access token.</li>
+          <li>Copy the webhook URL and configure it in Meta Business → WhatsApp → API Setup.</li>
+          <li>Use the message simulator to test without a real WhatsApp number.</li>
+          <li>Once everything works, activate the connection to receive real messages.</li>
         </ol>
       </div>
     </div>

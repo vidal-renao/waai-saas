@@ -47,7 +47,7 @@ export function RegisterForm() {
   if (success) {
     return (
       <div className="rounded-lg bg-green-900/20 px-4 py-4 text-sm text-green-400">
-        Cuenta creada. Redirigiendo...
+        Account created. Redirecting...
       </div>
     );
   }
@@ -56,14 +56,14 @@ export function RegisterForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
         <label htmlFor="fullName" className="text-sm text-zinc-300">
-          Nombre completo
+          Full Name
         </label>
         <input
           id="fullName"
           type="text"
           autoComplete="name"
           className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none"
-          placeholder="María García"
+          placeholder="Anna Müller"
           {...register("fullName")}
         />
         {errors.fullName && (
@@ -80,7 +80,7 @@ export function RegisterForm() {
           type="email"
           autoComplete="email"
           className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-green-500 focus:outline-none"
-          placeholder="tu@empresa.com"
+          placeholder="you@company.com"
           {...register("email")}
         />
         {errors.email && (
@@ -90,7 +90,7 @@ export function RegisterForm() {
 
       <div className="flex flex-col gap-1">
         <label htmlFor="password" className="text-sm text-zinc-300">
-          Contraseña
+          Password
         </label>
         <input
           id="password"
@@ -112,7 +112,7 @@ export function RegisterForm() {
       )}
 
       <Button type="submit" disabled={isSubmitting} className="mt-1 w-full">
-        {isSubmitting ? "Creando cuenta..." : "Crear cuenta gratis"}
+        {isSubmitting ? "Creating account..." : "Create free account"}
       </Button>
     </form>
   );

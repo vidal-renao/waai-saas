@@ -39,7 +39,7 @@ export default async function AgentAnalyticsPage({
           >
             ← Analytics
           </Link>
-          <h1 className="mt-2 text-xl font-bold text-white">Rendimiento por agente</h1>
+          <h1 className="mt-2 text-xl font-bold text-white">AI Employee Performance</h1>
         </div>
         <AnalyticsDateFilter currentPreset={preset} />
       </div>

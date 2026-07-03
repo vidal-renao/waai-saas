@@ -34,7 +34,7 @@ export default async function WhatsappTestPage({
     return (
       <div className="mx-auto max-w-2xl">
         <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-8 text-center">
-          <p className="text-zinc-400">No tienes permisos para probar conexiones.</p>
+          <p className="text-zinc-400">You do not have permission to test connections.</p>
         </div>
       </div>
     );
@@ -57,21 +57,21 @@ export default async function WhatsappTestPage({
           href={`/dashboard/whatsapp/${connectionId}`}
           className="text-sm text-zinc-500 hover:text-zinc-300"
         >
-          ← {connection.display_name ?? "Conexión"}
+          ← {connection.display_name ?? "Connection"}
         </Link>
         <div className="mt-2 flex items-center gap-3">
-          <h1 className="text-2xl font-bold text-white">Probar conexión</h1>
+          <h1 className="text-2xl font-bold text-white">Test Connection</h1>
           <WhatsappStatusBadge status={connection.status} />
         </div>
         <p className="mt-1 text-sm text-zinc-400">
-          Simula un mensaje entrante de WhatsApp para verificar que el agente responde.
+          Simulate an incoming WhatsApp message to verify your AI Employee responds correctly.
         </p>
       </div>
 
       {/* Info box */}
       <div className="mb-4 rounded-xl border border-blue-900/50 bg-blue-950/10 p-4 text-sm text-blue-400">
-        El simulador usa el provider <strong>Mock</strong> — el mensaje no llega a WhatsApp real.
-        Es solo para validar que el agente, el RAG y Claude responden correctamente.
+        The simulator uses the <strong>Mock</strong> provider — messages do not reach real WhatsApp.
+        Use this to validate that your AI Employee, company knowledge, and response logic work as expected.
       </div>
 
       <WhatsappTestPanel
@@ -83,14 +83,14 @@ export default async function WhatsappTestPage({
       {assignedAgent && (
         <div className="mt-4 rounded-xl border border-zinc-800 bg-zinc-900 p-4 text-sm">
           <p className="text-zinc-500">
-            Agente:{" "}
+            AI Employee:{" "}
             <Link
               href={`/dashboard/agents/${assignedAgent.id}`}
               className="text-green-400 hover:text-green-300"
             >
               {assignedAgent.name}
             </Link>{" "}
-            · Estado:{" "}
+            · Status:{" "}
             <span
               className={
                 assignedAgent.status === "active" ? "text-green-400" : "text-yellow-400"

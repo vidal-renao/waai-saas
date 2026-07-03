@@ -39,7 +39,7 @@ export default async function BillingSettingsPage() {
         </Link>
         <h1 className="mt-2 text-xl font-bold text-white">Billing</h1>
         <p className="mt-1 text-xs text-zinc-500">
-          Estado del plan y preparación para facturación real
+          Plan status and billing readiness
         </p>
       </div>
 
@@ -52,22 +52,22 @@ export default async function BillingSettingsPage() {
         />
 
         <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
-          <h3 className="text-sm font-semibold text-zinc-300 mb-4">Resumen de uso</h3>
+          <h3 className="text-sm font-semibold text-zinc-300 mb-4">Usage Summary</h3>
           <div className="space-y-2">
             <div className="flex justify-between">
-              <span className="text-xs text-zinc-400">Mensajes este mes</span>
+              <span className="text-xs text-zinc-400">Messages this month</span>
               <span className="text-xs font-mono text-zinc-300">
                 {snapshot.messagesSent} / {snapshot.messagesLimit === -1 ? "∞" : snapshot.messagesLimit}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-xs text-zinc-400">Agentes activos</span>
+              <span className="text-xs text-zinc-400">AI Employees</span>
               <span className="text-xs font-mono text-zinc-300">
                 {snapshot.agentsCreated} / {snapshot.agentsLimit === -1 ? "∞" : snapshot.agentsLimit}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-xs text-zinc-400">Documentos</span>
+              <span className="text-xs text-zinc-400">Documents</span>
               <span className="text-xs font-mono text-zinc-300">
                 {snapshot.documentsUploaded} / {snapshot.documentsLimit === -1 ? "∞" : snapshot.documentsLimit}
               </span>
@@ -77,14 +77,14 @@ export default async function BillingSettingsPage() {
             href="/dashboard/settings/usage"
             className="mt-4 block text-xs text-green-500 hover:text-green-400"
           >
-            Ver uso detallado →
+            View detailed usage →
           </Link>
         </div>
       </div>
 
       <div className="mb-4">
         <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider mb-3">
-          Eventos de billing
+          Billing Events
         </h2>
         <BillingEventList events={events} />
       </div>
@@ -94,7 +94,7 @@ export default async function BillingSettingsPage() {
           <strong className="text-zinc-400">Stripe:</strong> {stripe.message}
         </p>
         <p className="mt-1 text-xs text-zinc-600">
-          Ver <Link href="/dashboard/settings/system-health" className="text-zinc-500 hover:text-zinc-300">estado del sistema</Link> para más detalles operativos.
+          See <Link href="/dashboard/settings/system-health" className="text-zinc-500 hover:text-zinc-300">system health</Link> for more operational details.
         </p>
       </div>
     </div>
