@@ -5,13 +5,14 @@
 ![Supabase](https://img.shields.io/badge/Supabase-RLS%20enforced-3ECF8E?style=flat-square&logo=supabase)
 ![Claude](https://img.shields.io/badge/Claude-Sonnet%204.6-D4A017?style=flat-square)
 ![pgvector](https://img.shields.io/badge/pgvector-RAG-336791?style=flat-square&logo=postgresql)
-![Vercel](https://img.shields.io/badge/Vercel-production-000000?style=flat-square&logo=vercel)
-![Swiss DSG](https://img.shields.io/badge/Swiss%20DSG-Compliant-DC143C?style=flat-square)
+![Vercel](https://img.shields.io/badge/Vercel-staging-000000?style=flat-square&logo=vercel)
 ![Version](https://img.shields.io/badge/version-v0.9.0-22c55e?style=flat-square)
 
 A multi-tenant SaaS platform that lets businesses create, configure, and deploy intelligent WhatsApp agents without writing code. Each business connects their WhatsApp number, uploads their documents, configures their agent through a guided wizard, and gets an AI-powered assistant that answers customers, captures leads, and escalates to humans when needed.
 
 ---
+
+**Showcase status: staging / sandbox.** The documented configuration disables real WhatsApp delivery and Stripe charges. The deployment notes below are historical observations from June 2026, not a current uptime or production-readiness guarantee.
 
 ## Product Vision
 
@@ -23,16 +24,16 @@ Small businesses lose leads because they can't respond to WhatsApp fast enough. 
 
 ---
 
-## Production Status — v0.9.0
+## Deployment History — v0.9.0 (June 2026)
 
-> **Production deployment verified and stable as of 2026-06-14.**
+> Historical deployment notes recorded on 2026-06-14. Revalidate the running environment before relying on these results.
 
-### Confirmed operational
+### Checks recorded in June 2026
 
 | Component | Status | Notes |
 | --- | --- | --- |
 | `waai-saas.vercel.app` | **Live** | Deployment `dpl_7UpK6186Jv6Msrjfjq3PMexZ5rk3` promoted to production |
-| Register → Onboarding → Dashboard | **100% operational** | Full flow verified end-to-end |
+| Register → Onboarding → Dashboard | **Flow tested** | Full flow verified end-to-end |
 | `POST /api/workspaces` RLS | **Resolved** | Service role client pattern — JWT forwarding issue eliminated |
 | `/api/agents/[id]/sandbox` | **Validated** | Async streaming + dynamic System Prompt injection confirmed |
 | Claude Sonnet 4.6 (streaming) | **Stable** | Consistent responses after Anthropic Billing Org unblock |
@@ -40,7 +41,7 @@ Small businesses lose leads because they can't respond to WhatsApp fast enough. 
 | Supabase RLS | **Enforced** | All `waai_*` tables — no cross-workspace access |
 | pgvector RAG | **Active** | Cosine similarity search on `waai_document_chunks` |
 
-### Production constraints (intentional)
+### Documented sandbox constraints
 
 | Guard | State |
 | --- | --- |
@@ -208,7 +209,7 @@ See [ADR-0002](docs/adr/ADR-0002-supabase-public-schema-and-waai-prefix.md) for 
 - **Webhook signature verification** before processing any inbound payload
 - **No PII in application logs**
 - **Audit logs immutable** — INSERT-only, no UPDATE/DELETE on `waai_audit_logs`
-- **Swiss DSG / nDSG compliant** — data residency, retention policies, PII detection before persistence
+- **Privacy engineering goals** — document data residency, retention and handling of personal data; this README does not certify legal compliance
 
 ---
 
